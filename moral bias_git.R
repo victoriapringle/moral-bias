@@ -441,6 +441,7 @@ semPaths(s_bi.fit, "std", intercepts = FALSE, edge.label.cex = .7,
          bifactor = c("s_bias"), rotation = 3)
 
 lavInspect(s_bi.fit, what="est")$psi
+lavInspect(s_bi.fit, what="std")$psi
 
 
 # model 16: informant bias bifactor --------------------------------------------
