@@ -3,13 +3,16 @@ rm(list = ls())    # clear the environment
 # working directory ------------------------------------------------------------
 setwd("C:/Users/victo/OneDrive/Documents/moral bias")
 
+
 # libraries  -------------------------------------------------------------------
 library(lavaan)                    # for running the models
-library(tidyverse)                 # for renaming
 library(semPlot)                   # for plotting the sem graphs
+#library(tidyverse)                 # for renaming
+
 
 # data -------------------------------------------------------------------------
 data <- read.csv("impressiondata_moralbias.csv")  
+# nb. informants are aggregated (items formatted i_[trait]_avg)
 
 
 # ------------------------------------------------------------------------------
@@ -372,6 +375,7 @@ semPaths(si_wma.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 
 lavInspect(si_wma.fit, what="est")$psi
+lavInspect(si_wma.fit, what="std.all")$psi
 # low moral agreement pre-bias
 
 
@@ -514,7 +518,6 @@ si_bi = '## self  --------------------------------------------------------
                      start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_cooperative
           
           
-          
           # bias factor
           s_bias =~ start(1)*SP_creative + start(1)*SP_intelligent +
                     start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
@@ -584,15 +587,13 @@ si_bi = '## self  --------------------------------------------------------
           i_bias~~0*i_moral
           i_bias~~0*s_moral
           
+          s_bias~~0*s_ability
           s_bias~~0*i_ability
-          s_bias~~0*i_ability
+          s_bias~~0*s_warmth
           s_bias~~0*i_warmth
-          s_bias~~0*i_warmth
+          s_bias~~0*s_moral
           s_bias~~0*i_moral
-          s_bias~~0*i_moral
-          
-      '
-
+          '
 
 
 si_bi.fit = cfa(si_bi, data, missing='fiml')
@@ -602,9 +603,8 @@ semPaths(si_bi.fit, "std", intercepts = FALSE, edge.label.cex = .7,
          bifactor = c("i_bias","s_bias"), rotation = 3)
 
 
-
-
-
+lavInspect(si_bi.fit, what="est")$psi
+lavInspect(si_bi.fit, what="std.all")$psi
 
 
 
