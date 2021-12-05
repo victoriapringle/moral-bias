@@ -7,7 +7,7 @@ setwd("C:/Users/victo/OneDrive/Documents/moral bias")
 # libraries  -------------------------------------------------------------------
 library(lavaan)                    # for running the models
 library(semPlot)                   # for plotting the sem graphs
-#library(tidyverse)                 # for renaming
+#library(tidyverse)                # for renaming
 
 
 # data -------------------------------------------------------------------------
@@ -18,6 +18,7 @@ data <- read.csv("impressiondata_moralbias.csv")
 # ------------------------------------------------------------------------------
 # ------------------------------------ self ------------------------------------
 # model 1: ability  ------------------------------------------------------------
+# w/ fixed residuals 
 s_a = '# ability factor
        ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
                   start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
@@ -36,7 +37,25 @@ semPaths(s_a.fit, "std", intercepts = FALSE, edge.label.cex = .7,
          style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
 
 
+
+
+# w/o fixed residuals
+s_a = '# ability factor
+       ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
+                  start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
+                  start(1)*SP_socially.skilled
+      '
+
+s_a.fit = cfa(s_a, data, missing='fiml')
+summary(s_a.fit, fit.measures = TRUE, standardized = TRUE)
+semPaths(s_a.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
+         style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
+
+
+
+
 # model 2: warmth --------------------------------------------------------------
+# w/ fixed residuals
 s_w = '# warmth factor
       warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny
       
@@ -53,7 +72,23 @@ semPaths(s_w.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 
 
+# w/o fixed residuals
+s_w = '# warmth factor
+      warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny
+      
+      '
+
+s_w.fit = cfa(s_w, data, missing='fiml')
+summary(s_w.fit, fit.measures = TRUE, standardized = TRUE)
+semPaths(s_w.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
+         style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
+
+
+
+
+
 # model 3: morality ------------------------------------------------------------
+# w/ fixed residuals
 s_m = '# moral factor
        moral =~ start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy + 
                 start(1)*SP_loyal
@@ -69,6 +104,19 @@ s_m.fit = cfa(s_m, data, missing='fiml')
 summary(s_m.fit, fit.measures = TRUE, standardized = TRUE)
 semPaths(s_m.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
          style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
+
+
+# w/o fixed residuals
+s_m = '# moral factor
+       moral =~ start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy + 
+                start(1)*SP_loyal
+      '
+
+s_m.fit = cfa(s_m, data, missing='fiml')
+summary(s_m.fit, fit.measures = TRUE, standardized = TRUE)
+semPaths(s_m.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
+         style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
+
 
 
 
@@ -103,7 +151,10 @@ semPaths(s_wm.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 
 
+
+
 # model 5: warmth, morality, ability -------------------------------------------
+# w/ fixed residuals
 s_wma = '# ability factor
         ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
                   start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
@@ -148,6 +199,37 @@ summary(s_wma.fit, fit.measures = TRUE, standardized = TRUE)
 semPaths(s_wma.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
          style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
 
+
+
+# w/o fixed residuals
+s_wma = '# ability factor
+        ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
+                  start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
+                  start(1)*SP_socially.skilled
+                  
+        
+        # warmth factor
+        warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
+                  start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_cooperative
+        
+        
+        # moral factor
+        moral =~ start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy + 
+                 start(1)*SP_loyal +
+                 start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_cooperative
+                
+        # allow factors to correlate
+        moral ~~ warmth
+        moral ~~ ability
+        warmth ~~ ability
+        
+        '
+
+s_wma.fit = cfa(s_wma, data, missing='fiml')
+summary(s_wma.fit, fit.measures = TRUE, standardized = TRUE)
+
+semPaths(s_wma.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
+         style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
 
 
 
