@@ -18,27 +18,6 @@ data <- read.csv("impressiondata_moralbias.csv")
 # ------------------------------------------------------------------------------
 # ------------------------------------ self ------------------------------------
 # model 1: ability  ------------------------------------------------------------
-# w/ fixed residuals 
-s_a = '# ability factor
-       ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
-                  start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
-                  start(1)*SP_socially.skilled
-                  
-       # fix residuals to 1
-       SP_creative~~1*SP_creative
-       SP_intelligent~~1*SP_intelligent
-       SP_selfdiciplined~~1*SP_selfdiciplined
-       SP_socially.skilled~~1*SP_socially.skilled
-      '
-
-s_a.fit = cfa(s_a, data, missing='fiml')
-summary(s_a.fit, fit.measures = TRUE, standardized = TRUE)
-semPaths(s_a.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
-         style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
-
-
-
-
 # w/o fixed residuals
 s_a = '# ability factor
        ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
@@ -55,23 +34,6 @@ semPaths(s_a.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 
 # model 2: warmth --------------------------------------------------------------
-# w/ fixed residuals
-s_w = '# warmth factor
-      warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny
-      
-      # fix residuals to 1
-      SP_happy~~1*SP_happy
-      SP_warm~~1*SP_warm
-      SP_funny~~1*SP_funny
-      '
-
-s_w.fit = cfa(s_w, data, missing='fiml')
-summary(s_w.fit, fit.measures = TRUE, standardized = TRUE)
-semPaths(s_w.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
-         style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
-
-
-
 # w/o fixed residuals
 s_w = '# warmth factor
       warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny
@@ -88,25 +50,6 @@ semPaths(s_w.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 
 # model 3: morality ------------------------------------------------------------
-# w/ fixed residuals
-s_m = '# moral factor
-       moral =~ start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy + 
-                start(1)*SP_loyal
-      
-       # fix residuals to 1
-       SP_fair~~1*SP_fair
-       SP_honest~~1*SP_honest
-       SP_trustworthy~~1*SP_trustworthy
-       SP_loyal~~1*SP_loyal
-      '
-
-s_m.fit = cfa(s_m, data, missing='fiml')
-summary(s_m.fit, fit.measures = TRUE, standardized = TRUE)
-semPaths(s_m.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
-         style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
-
-
-# w/o fixed residuals
 s_m = '# moral factor
        moral =~ start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy + 
                 start(1)*SP_loyal
@@ -154,54 +97,6 @@ semPaths(s_wm.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 
 # model 5: warmth, morality, ability -------------------------------------------
-# w/ fixed residuals
-s_wma = '# ability factor
-        ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
-                  start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
-                  start(1)*SP_socially.skilled
-                  
-        
-        # warmth factor
-        warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
-                  start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_cooperative
-        
-        
-        # moral factor
-        moral =~ start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy + 
-                 start(1)*SP_loyal +
-                 start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_cooperative
-                
-        
-        # fix residuals to 1
-        SP_happy~~1*SP_happy
-        SP_warm~~1*SP_warm
-        SP_funny~~1*SP_funny
-        SP_fair~~1*SP_fair
-        SP_honest~~1*SP_honest
-        SP_trustworthy~~1*SP_trustworthy
-        SP_loyal~~1*SP_loyal
-        SP_creative~~1*SP_creative
-        SP_intelligent~~1*SP_intelligent
-        SP_selfdiciplined~~1*SP_selfdiciplined
-        SP_socially.skilled~~1*SP_socially.skilled
-        
-        
-        # allow factors to correlate
-        moral ~~ warmth
-        moral ~~ ability
-        warmth ~~ ability
-        
-        '
-
-s_wma.fit = cfa(s_wma, data, missing='fiml')
-summary(s_wma.fit, fit.measures = TRUE, standardized = TRUE)
-
-semPaths(s_wma.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
-         style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
-
-
-
-# w/o fixed residuals
 s_wma = '# ability factor
         ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
                   start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
@@ -288,12 +183,12 @@ semPaths(i_m.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 # model 9: warm-moral ----------------------------------------------------------
 i_wm = '# warmth factor
         i_warmth =~ start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
-                  a*i_humble_avg + b*i_kind_avg +c*i_cooperative_avg
+                  x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
         
         # moral factor
         i_moral =~ start(1)*i_fair_avg + start(1)*i_honest_avg + 
                  start(1)*i_trustworty_avg + start(1)*i_loyal_avg +
-                 a*i_humble_avg + b*i_kind_avg + c*i_cooperative_avg
+                 x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
         
         # fix residuals to 1
         i_happy_avg~~1*i_happy_avg
@@ -322,12 +217,12 @@ i_wma = '# ability factor
                   
         # warmth factor
         i_warmth =~ start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
-                  a*i_humble_avg + b*i_kind_avg +c*i_cooperative_avg
+                  x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
         
         # moral factor
         i_moral =~ start(1)*i_fair_avg + start(1)*i_honest_avg + 
                  start(1)*i_trustworty_avg + start(1)*i_loyal_avg +
-                 a*i_humble_avg + b*i_kind_avg + c*i_cooperative_avg
+                 x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
         
           
         # allow factors to correlate
