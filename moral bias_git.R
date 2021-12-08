@@ -34,7 +34,6 @@ semPaths(s_a.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 
 # model 2: warmth --------------------------------------------------------------
-# w/o fixed residuals
 s_w = '# warmth factor
       warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny
       
@@ -72,16 +71,6 @@ s_wm = '# warmth factor
         moral =~ start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy + 
                  start(1)*SP_loyal +
                  a*SP_humble + b*SP_kind + c*SP_cooperative
-        
-        # fix residuals to 1
-        SP_happy~~1*SP_happy
-        SP_warm~~1*SP_warm
-        SP_funny~~1*SP_funny
-        
-        SP_fair~~1*SP_fair
-        SP_honest~~1*SP_honest
-        SP_trustworthy~~1*SP_trustworthy
-        SP_loyal~~1*SP_loyal
         
         # allow factors to correlate
         moral ~~ warmth
@@ -138,8 +127,8 @@ i_a = '# ability factor
                    start(1)*i_socially.skilled_avg'
 
 i_a.fit = cfa(i_a, data, missing='fiml')
-summary(s_a.fit, fit.measures = TRUE, standardized = TRUE)
-semPaths(s_a.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
+summary(i_a.fit, fit.measures = TRUE, standardized = TRUE)
+semPaths(i_a.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
          style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
 
 
@@ -148,10 +137,6 @@ semPaths(s_a.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 i_w = '# warmth factor
       i_warmth =~ start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg
       
-      # fix residuals to 1
-      i_happy_avg~~1*i_happy_avg
-      i_warm_avg~~1*i_warm_avg
-      i_funny_avg~~1*i_funny_avg
       '
 
 i_w.fit = cfa(i_w, data, missing='fiml')
@@ -164,14 +149,7 @@ semPaths(i_w.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 # model 8: morality ------------------------------------------------------------
 i_m = '# moral factor
       i_moral =~ start(1)*i_fair_avg + start(1)*i_honest_avg + 
-                 start(1)*i_trustworty_avg + start(1)*i_loyal_avg
-                 
-       # fix residuals to 1
-       i_fair_avg~~1*i_fair_avg
-       i_honest_avg~~1*i_honest_avg
-       i_trustworty_avg~~1*i_trustworty_avg
-       i_loyal_avg~~1*i_loyal_avg
-      '
+                 start(1)*i_trustworty_avg + start(1)*i_loyal_avg'
 
 i_m.fit = cfa(i_m, data, missing='fiml')
 summary(i_m.fit, fit.measures = TRUE, standardized = TRUE)
@@ -189,15 +167,6 @@ i_wm = '# warmth factor
         i_moral =~ start(1)*i_fair_avg + start(1)*i_honest_avg + 
                  start(1)*i_trustworty_avg + start(1)*i_loyal_avg +
                  x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
-        
-        # fix residuals to 1
-        i_happy_avg~~1*i_happy_avg
-        i_warm_avg~~1*i_warm_avg
-        i_funny_avg~~1*i_funny_avg
-        i_fair_avg~~1*i_fair_avg
-        i_honest_avg~~1*i_honest_avg
-        i_trustworty_avg~~1*i_trustworty_avg
-        i_loyal_avg~~1*i_loyal_avg
         
         # allow factors to correlate
         i_moral ~~ i_warmth
@@ -404,6 +373,9 @@ summary(i_bi.fit, fit.measures = TRUE, standardized = TRUE)
 semPaths(i_bi.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
          style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5, layout="tree2",
          bifactor = c("i_bias"), rotation = 3)
+
+lavInspect(i_bi.fit, what="est")$psi
+lavInspect(i_bi.fit, what="std")$psi
 
 
 
