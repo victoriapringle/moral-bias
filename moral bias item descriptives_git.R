@@ -159,7 +159,7 @@ colnames(m) = gsub("_avg", "", colnames(m))
 
 
 # compute summary table
-datasummary(All(m) ~ Mean + SD, data = m)                   # All = use all vars; capitalized Mean and SD = implicitly has na.rm=T
+datasummary(All(m) ~ Mean + SD + Median, data = m)                   # All = use all vars; capitalized Mean and SD = implicitly has na.rm=T
 
 
 # compute cor table separately & save as df
@@ -168,19 +168,7 @@ corr = corr[,-1]                                            # remove col 1 which
 
 
 # then bind the mean/sd and cor table
-datasummary(All(m) ~ Mean + SD, data = m, add_columns = corr)
-
-
-
-# output the table as a jpeg file
-# 1. open jpeg file
-jpeg("moralbias_table1.jpg")
-
-# 2. create the plot
-datasummary(All(m) ~ Mean + SD, data = m, add_columns = corr)
-
-# 3. close the file
-dev.off()
+datasummary(All(m) ~ Mean + SD + Median, data = m, add_columns = corr, output = 'moralbias_table1.html')
 
 
 
