@@ -20,8 +20,8 @@ sp_items = data %>% select(starts_with("SP_"))
 i_items = data %>% select(ends_with("avg"))
 
 
-sp_items = sp_items[, -c(10:12,17,21,23)]
-i_items = i_items[, -c(3,6,12:13)]
+sp_items = sp_items[, -c(6,8:12,17,23:25)]
+i_items = i_items[, -c(1,7,12:15)]
 
 
 #-------------------------------------------------------------------------------
@@ -111,7 +111,7 @@ rownames(i_cor) = gsub("_avg", "",rownames(i_cor))
 corrplot::corrplot(i_cor, method="color",type = "lower",  
                    col =colorRampPalette(c("#EFCC98","#F89078","#ED5983","#C0369D"))(10),
                    tl.col="black", tl.srt=45, addCoef.col = "#EDD9A3",cl.ratio = .1, mar=c(0,0,2,0))
-mtext("Correlations among informant-reported traits", at=12, line=.5, cex=1.5)
+mtext("Correlations among informant-reported traits", at=6, line=.5, cex=1.5)
 
 
 
@@ -142,6 +142,50 @@ ggplot(reshape_i,
 mean(i_cor)
 range(i_cor)
 sd(i_cor)
+
+
+
+
+# cor table --------------------------------------------------------------------
+library(modelsummary)  # for the m, sd, cor table
+
+# put the relevant self/informant items in a single df
+m = cbind(sp_items, i_items)
+
+
+# rename them to have similar colnames (s_ = self, i_ = informant)
+colnames(m) = gsub("SP_", "s_", colnames(m))
+colnames(m) = gsub("_avg", "", colnames(m))
+
+
+# compute summary table
+datasummary(All(m) ~ Mean + SD, data = m)                   # All = use all vars; capitalized Mean and SD = implicitly has na.rm=T
+
+
+# compute cor table separately & save as df
+corr <- datasummary_correlation(m, output = "data.frame")
+corr = corr[,-1]                                            # remove col 1 which has the varnames 
+
+
+# then bind the mean/sd and cor table
+datasummary(All(m) ~ Mean + SD, data = m, add_columns = corr)
+
+
+
+# output the table as a jpeg file
+# 1. open jpeg file
+jpeg("moralbias_table1.jpg")
+
+# 2. create the plot
+datasummary(All(m) ~ Mean + SD, data = m, add_columns = corr)
+
+# 3. close the file
+dev.off()
+
+
+
+
+
 
 
 
