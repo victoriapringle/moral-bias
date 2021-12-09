@@ -18,10 +18,9 @@ data <- read.csv("impressiondata_moralbias.csv")
 # ------------------------------------------------------------------------------
 # ------------------------------------ self ------------------------------------
 # model 1: ability  ------------------------------------------------------------
-# w/o fixed residuals
 s_a = '# ability factor
        ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
-                  start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
+                  start(1)*SP_selfdiciplined + 
                   start(1)*SP_socially.skilled
       '
 
@@ -88,7 +87,7 @@ semPaths(s_wm.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 # model 5: warmth, morality, ability -------------------------------------------
 s_wma = '# ability factor
         ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
-                  start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
+                  start(1)*SP_selfdiciplined + 
                   start(1)*SP_socially.skilled
                   
         
@@ -123,8 +122,7 @@ semPaths(s_wma.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 # model 6: ability  ------------------------------------------------------------ 
 i_a = '# ability factor
         ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
-                   start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
-                   start(1)*i_socially.skilled_avg'
+                   start(1)*i_selfdiciplined_avg + start(1)*i_socially.skilled_avg'
 
 i_a.fit = cfa(i_a, data, missing='fiml')
 summary(i_a.fit, fit.measures = TRUE, standardized = TRUE)
@@ -181,8 +179,7 @@ semPaths(i_wm.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 # model 10: warmth, morality, ability ------------------------------------------
 i_wma = '# ability factor
         i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
-                     start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
-                     start(1)*i_socially.skilled_avg
+                     start(1)*i_selfdiciplined_avg + start(1)*i_socially.skilled_avg
                   
         # warmth factor
         i_warmth =~ start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
@@ -214,8 +211,7 @@ semPaths(i_wma.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 si_wma = '## self  --------------------------------------------------------
           # ability factor
           s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
-                       start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
-                       start(1)*SP_socially.skilled
+                       start(1)*SP_selfdiciplined + start(1)*SP_socially.skilled
                         
         # warmth factor
           s_warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
@@ -231,8 +227,7 @@ si_wma = '## self  --------------------------------------------------------
           ## informant -----------------------------------------------------
           # ability factor
           i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
-                       start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
-                       start(1)*i_socially.skilled_avg
+                       start(1)*i_selfdiciplined_avg + start(1)*i_socially.skilled_avg
                   
          # warmth factor
           i_warmth =~ start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
@@ -284,8 +279,7 @@ lavInspect(si_wma.fit, what="std.all")$psi
 # model 15: self-bias bifactor  ------------------------------------------------
 s_bi = "# ability factor
         s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
-                  start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
-                  start(1)*SP_socially.skilled
+                  start(1)*SP_selfdiciplined + start(1)*SP_socially.skilled
                   
         
         # warmth factor
@@ -301,8 +295,7 @@ s_bi = "# ability factor
         
         # bias factor
         s_bias =~ start(1)*SP_creative + start(1)*SP_intelligent +
-                  start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
-                  start(1)*SP_socially.skilled +
+                  start(1)*SP_selfdiciplined + start(1)*SP_socially.skilled +
                   start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
                   start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_cooperative +
                   start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy +
@@ -334,8 +327,7 @@ lavInspect(s_bi.fit, what="std")$psi
 # model 16: informant bias bifactor --------------------------------------------
 i_bi = '# ability factor
         i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
-                     start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
-                     start(1)*i_socially.skilled_avg
+                     start(1)*i_selfdiciplined_avg + start(1)*i_socially.skilled_avg
                   
         # warmth factor
           i_warmth =~ start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
@@ -354,8 +346,7 @@ i_bi = '# ability factor
                      
         # bias factor
         i_bias =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
-                  start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
-                  start(1)*i_socially.skilled_avg +
+                  start(1)*i_selfdiciplined_avg + start(1)*i_socially.skilled_avg +
                   start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
                   start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_cooperative_avg +
                   start(1)*i_fair_avg + start(1)*i_honest_avg + 
@@ -383,8 +374,7 @@ lavInspect(i_bi.fit, what="std")$psi
 si_bi = '## self  --------------------------------------------------------
           # ability factor
           s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
-                       start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
-                       start(1)*SP_socially.skilled
+                       start(1)*SP_selfdiciplined + start(1)*SP_socially.skilled
                         
          # warmth factor
           s_warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
@@ -399,8 +389,7 @@ si_bi = '## self  --------------------------------------------------------
           
           # bias factor
           s_bias =~ start(1)*SP_creative + start(1)*SP_intelligent +
-                    start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
-                    start(1)*SP_socially.skilled +
+                    start(1)*SP_selfdiciplined + start(1)*SP_socially.skilled +
                     start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
                     start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_cooperative +
                     start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy +
@@ -410,8 +399,7 @@ si_bi = '## self  --------------------------------------------------------
           ## informant -----------------------------------------------------
           # ability factor
           i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
-                       start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
-                       start(1)*i_socially.skilled_avg
+                       start(1)*i_selfdiciplined_avg + start(1)*i_socially.skilled_avg
                   
           # warmth factor
           i_warmth =~ start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
@@ -424,8 +412,7 @@ si_bi = '## self  --------------------------------------------------------
           
           # bias factor
           i_bias =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
-                    start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
-                    start(1)*i_socially.skilled_avg +
+                    start(1)*i_selfdiciplined_avg + start(1)*i_socially.skilled_avg +
                     start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
                     start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_cooperative_avg +
                     start(1)*i_fair_avg + start(1)*i_honest_avg + 
