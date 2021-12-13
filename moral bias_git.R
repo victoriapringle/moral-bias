@@ -487,6 +487,92 @@ lavInspect(si_bi.fit, what="std.all")$psi
 
 
 
+# ------------------------------------------------------------------------------
+# -------------------------------- extras --------------------------------------
+# is bias related to self-esteem? ----------------------------------------------
+
+se_bias = "# ability factor
+           s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
+                        start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
+                        start(1)*SP_socially.skilled
+                        
+        
+          # warmth factor
+            s_warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
+                      a*SP_humble + b*SP_kind + c*SP_cooperative
+            
+          
+          # moral factor
+            s_moral =~ start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy + 
+                   start(1)*SP_loyal +
+                   a*SP_humble + b*SP_kind + c*SP_cooperative
+                  
+          
+          # bias factor
+          s_bias =~ start(1)*SP_creative + start(1)*SP_intelligent +
+                    start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
+                    start(1)*SP_socially.skilled +
+                    start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
+                    start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_cooperative +
+                    start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy +
+                    start(1)*SP_loyal
+                    
+          # allow main factors to correlate
+          s_moral ~~ s_warmth
+          s_moral ~~ s_ability
+          s_warmth ~~ s_ability
+                      
+          # but main factors independent of bias
+          s_bias~~0*s_ability
+          s_bias~~0*s_warmth
+          s_bias~~0*s_moral
+
+          # self-esteem
+          se =~ NA*SP_selfesteem
+          se ~~ 1*se
+          
+          se ~~ s_bias
+          se ~~ 0*s_moral
+          se ~~ 0*s_warmth
+          se ~~ 0*s_ability
+          "
+
+
+se_bias.fit = cfa(se_bias, data, missing='fiml')
+summary(se_bias.fit, fit.measures = TRUE, standardized = TRUE)
+semPaths(se_bias.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
+         style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5, layout="tree2",
+         bifactor = c("se","s_bias"), rotation = 3)
+
+
+
+
+
+
+# invariance testing -----------------------------------------------------------
+# first, need to create a grouping variable - here it'll be self or informant
+long = data %>% tidyr::pivot_longer(-ID)
+
+long = long %>% rename(trait = name)
+
+
+
+
+# warmth: configural model
+w.config <- cfa(model, data = finance, estimator = "WLSMV", group = "gender")
+
+summary(cfa.config, fit.measures = TRUE, standardized = TRUE)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
