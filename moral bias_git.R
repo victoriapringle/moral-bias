@@ -490,7 +490,6 @@ lavInspect(si_bi.fit, what="std.all")$psi
 # ------------------------------------------------------------------------------
 # -------------------------------- extras --------------------------------------
 # is bias related to self-esteem? ----------------------------------------------
-
 se_bias = "# ability factor
            s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
                         start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
@@ -543,6 +542,67 @@ summary(se_bias.fit, fit.measures = TRUE, standardized = TRUE)
 semPaths(se_bias.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
          style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5, layout="tree2",
          bifactor = c("se","s_bias"), rotation = 3)
+
+
+
+
+# is bias related to liking? ---------------------------------------------------
+like_bias = " # ability factor
+              i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
+                           start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
+                           start(1)*i_socially.skilled_avg
+                        
+              # warmth factor
+                i_warmth =~ start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
+                            x*i_humble_avg + y*i_kind_avg +z*i_cooperative_avg
+              
+              # moral factor
+                i_moral =~ start(1)*i_fair_avg + start(1)*i_honest_avg + 
+                           start(1)*i_trustworty_avg + start(1)*i_loyal_avg +
+                           x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
+              
+              # allow factors to correlate
+              i_moral ~~ i_warmth
+              i_moral ~~ i_ability
+              i_warmth ~~ i_ability
+              
+                           
+              # bias factor
+              i_bias =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
+                        start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
+                        start(1)*i_socially.skilled_avg +
+                        start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
+                        start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_cooperative_avg +
+                        start(1)*i_fair_avg + start(1)*i_honest_avg + 
+                        start(1)*i_trustworty_avg + start(1)*i_loyal_avg
+                           
+              # main factors independent of bias
+              i_bias~~0*i_ability
+              i_bias~~0*i_warmth
+              i_bias~~0*i_moral
+              
+              
+              # liking
+              liking =~ i_like_avg
+              
+              liking ~~ i_bias
+              liking ~~ 0*i_moral
+              liking ~~ 0*i_warmth
+              liking ~~ 0*i_ability
+          "
+
+like_bias.fit = cfa(like_bias, data, missing='fiml')
+summary(like_bias.fit, fit.measures = TRUE, standardized = TRUE)
+semPaths(like_bias.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
+         style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5, layout="tree2",
+         bifactor = c("liking","i_bias"), rotation = 3)
+
+
+
+
+
+
+
 
 
 
