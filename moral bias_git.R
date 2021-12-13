@@ -553,7 +553,7 @@ semPaths(se_bias.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 # first, need to create a grouping variable - here it'll be self or informant
 wide = data %>% select(colnames(data), -contains(c("i1", "i2","i3","i4")))      # remove the specific informants to reduce df load
 
-long = wide %>% tidyr::pivot_longer(-ID)                                        # convert to long
+long = wide %>% tidyr::pivot_longer(-ID)
 long = long %>% rename(trait = name)
 
 long$perspective = rep(rep(c(0,1), times = c(26, 21)), times=246)
