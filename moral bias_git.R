@@ -583,7 +583,8 @@ like_bias = " # ability factor
               
               
               # liking
-              liking =~ i_like_avg
+              liking =~ NA*i_like_avg
+              liking ~~ 1*liking
               
               liking ~~ i_bias
               liking ~~ 0*i_moral
@@ -600,32 +601,6 @@ semPaths(like_bias.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 
 
-
-
-
-
-
-
-
-
-
-# invariance testing -----------------------------------------------------------
-# first, need to create a grouping variable - here it'll be self or informant
-wide = data %>% select(colnames(data), -contains(c("i1", "i2","i3","i4")))      # remove the specific informants to reduce df load
-
-long = wide %>% tidyr::pivot_longer(-ID)
-long = long %>% rename(trait = name)
-
-long$perspective = rep(rep(c(0,1), times = c(26, 21)), times=246)
-
-
-
-# warmth: configural model
-
-
-w.config <- cfa(model, data = finance, estimator = "WLSMV", group = "perspective")
-
-summary(cfa.config, fit.measures = TRUE, standardized = TRUE)
 
 
 
