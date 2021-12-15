@@ -438,21 +438,7 @@ si_bi = '## self  --------------------------------------------------------
           s_ability ~~ i_ability
           
           # force independence of main factors except for the agreement
-          s_warmth ~~ 0*s_moral
-          s_warmth ~~ 0*s_ability
-          s_warmth ~~ 0*i_moral
-          s_warmth ~~ 0*i_ability
           
-          s_moral ~~ 0*s_ability
-          s_moral ~~ 0*i_ability
-          s_moral ~~ 0*i_warmth
-          
-          s_ability ~~ 0*i_warmth
-          s_ability ~~ 0*i_moral
-          
-          i_warmth ~~ 0*i_moral
-          i_warmth ~~ 0*i_ability
-          i_moral ~~ 0*i_ability
           
           # bias factors independent
           i_bias ~~ 0*s_bias
