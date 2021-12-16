@@ -37,9 +37,8 @@ semPaths(s_a.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 # model 2: warmth --------------------------------------------------------------
 s_w = '# warmth factor
-      warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_compassionate +
+      warmth =~ start(1)*SP_warm + start(1)*SP_compassionate +
                 start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_generous
-      
       '
 
 s_w.fit = cfa(s_w, data, missing='fiml')
@@ -65,45 +64,22 @@ semPaths(s_m.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 
 
-# model 4: warm-moral ----------------------------------------------------------
-s_wm = '# warmth factor
-        warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
-        a*SP_humble + b*SP_kind + c*SP_cooperative
-        
-        # moral factor
-        moral =~ start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy + 
-                 start(1)*SP_loyal +
-                 a*SP_humble + b*SP_kind + c*SP_cooperative
-        
-        # allow factors to correlate
-        moral ~~ warmth
-       '
-
-s_wm.fit = cfa(s_wm, data, missing='fiml')
-summary(s_wm.fit, fit.measures = TRUE, standardized = TRUE)            
-semPaths(s_wm.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
-         style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
-
-
-
-
-
 # model 5: warmth, morality, ability -------------------------------------------
 s_wma = '# ability factor
-        ability =~start(1)*SP_creative + start(1)*SP_intelligent +
-                  start(1)*SP_attractive + start(1)*SP_socially.skilled
+        ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
+                  start(1)*SP_attractive + start(1)*SP_socially.skilled +
+                  start(1)*SP_funny
                   
         
         # warmth factor
-        warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
-        a*SP_humble + b*SP_kind + c*SP_cooperative
+        warmth =~ start(1)*SP_warm + start(1)*SP_compassionate +
+                start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_generous
         
         
         # moral factor
         moral =~ start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy + 
-                 start(1)*SP_loyal +
-                 a*SP_humble + b*SP_kind + c*SP_cooperative
-                 
+                 start(1)*SP_loyal 
+
                 
         # allow factors to correlate
         moral ~~ warmth
@@ -125,7 +101,9 @@ semPaths(s_wma.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 # model 6: ability  ------------------------------------------------------------ 
 i_a = '# ability factor
         ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
-                   start(1)*i_attractive_avg + start(1)*i_socially.skilled_avg'
+                   start(1)*i_attractive_avg + start(1)*i_socially.skilled_avg +
+                   start(1)*i_funny_avg
+      '
 
 i_a.fit = cfa(i_a, data, missing='fiml')
 summary(i_a.fit, fit.measures = TRUE, standardized = TRUE)
@@ -136,8 +114,9 @@ semPaths(i_a.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 # model 7: warmth  -------------------------------------------------------------
 i_w = '# warmth factor
-      i_warmth =~ start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg
-      
+      i_warmth =~ start(1)*i_warm_avg + start(1)*i_compassionate_avg +
+                  start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_generous_avg 
+                  
       '
 
 i_w.fit = cfa(i_w, data, missing='fiml')
@@ -159,40 +138,20 @@ semPaths(i_m.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 
 
-# model 9: warm-moral ----------------------------------------------------------
-i_wm = '# warmth factor
-        i_warmth =~ start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
-                  x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
-        
-        # moral factor
-        i_moral =~ start(1)*i_fair_avg + start(1)*i_honest_avg + 
-                 start(1)*i_trustworty_avg + start(1)*i_loyal_avg +
-                 x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
-        
-        # allow factors to correlate
-        i_moral ~~ i_warmth
-       '
-
-i_wm.fit = cfa(i_wm, data, missing='fiml')
-summary(i_wm.fit, fit.measures = TRUE, standardized = TRUE)
-semPaths(i_wm.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
-         style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
-
-
 # model 10: warmth, morality, ability ------------------------------------------
 i_wma = '# ability factor
         i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
-                   start(1)*i_attractive_avg + start(1)*i_socially.skilled_avg
+                   start(1)*i_attractive_avg + start(1)*i_socially.skilled_avg +
+                   start(1)*i_funny_avg
                   
         # warmth factor
-        i_warmth =~ start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
-                  x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
+        i_warmth =~ start(1)*i_warm_avg + start(1)*i_compassionate_avg +
+                  start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_generous_avg 
         
         # moral factor
         i_moral =~ start(1)*i_fair_avg + start(1)*i_honest_avg + 
-                 start(1)*i_trustworty_avg + start(1)*i_loyal_avg +
-                 x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
-        
+                 start(1)*i_trustworty_avg + start(1)*i_loyal_avg
+
           
         # allow factors to correlate
         i_moral ~~ i_warmth
@@ -214,34 +173,33 @@ semPaths(i_wma.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 si_wma = '## self  --------------------------------------------------------
           # ability factor
           s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
-                  start(1)*SP_attractive + start(1)*SP_socially.skilled
-                        
-        # warmth factor
-          s_warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
-                    a*SP_humble + b*SP_kind + c*SP_cooperative
+                    start(1)*SP_attractive + start(1)*SP_socially.skilled +
+                    start(1)*SP_funny
+                    
           
-        
-        # moral factor
+          # warmth factor
+          s_warmth =~ start(1)*SP_warm + start(1)*SP_compassionate +
+                  start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_generous
+          
+          
+          # moral factor
           s_moral =~ start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy + 
-                 start(1)*SP_loyal +
-                 a*SP_humble + b*SP_kind + c*SP_cooperative
-                 
+                   start(1)*SP_loyal 
+                   
           
           ## informant -----------------------------------------------------
-          # ability factor
           i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
-                   start(1)*i_attractive_avg + start(1)*i_socially.skilled_avg
-                  
-         # warmth factor
-          i_warmth =~ start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
-                      x*i_humble_avg + y*i_kind_avg +z*i_cooperative_avg
-        
-        # moral factor
-          i_moral =~ start(1)*i_fair_avg + start(1)*i_honest_avg + 
-                     start(1)*i_trustworty_avg + start(1)*i_loyal_avg +
-                     x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
-         
+                   start(1)*i_attractive_avg + start(1)*i_socially.skilled_avg +
+                   start(1)*i_funny_avg
+                    
+          # warmth factor
+          i_warmth =~ start(1)*i_warm_avg + start(1)*i_compassionate_avg +
+                    start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_generous_avg 
           
+          # moral factor
+          i_moral =~ start(1)*i_fair_avg + start(1)*i_honest_avg + 
+                   start(1)*i_trustworty_avg + start(1)*i_loyal_avg
+
           
           # agreement ----------------------------------------------------------
           s_warmth ~~ i_warmth
@@ -265,6 +223,7 @@ si_wma = '## self  --------------------------------------------------------
           i_warmth ~~ 0*i_ability
           i_moral ~~ 0*i_ability
           
+          
           '
 
 si_wma.fit = cfa(si_wma, data, missing='fiml')
@@ -275,44 +234,34 @@ semPaths(si_wma.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 lavInspect(si_wma.fit, what="est")$psi
 lavInspect(si_wma.fit, what="std.all")$psi
-# low moral agreement pre-bias
+# low M/C agreement pre-bias
 
 
 
 # model 15: self-bias ----------------------------------------------------------
 s_bi = "# ability factor
-        s_ability =~start(1)*SP_creative + start(1)*SP_intelligent +
-                  start(1)*SP_attractive + start(1)*SP_socially.skilled
-                  
-        
-        # warmth factor
-          s_warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
-                    a*SP_humble + b*SP_kind + c*SP_cooperative
+          s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
+                    start(1)*SP_attractive + start(1)*SP_socially.skilled +
+                    start(1)*SP_funny
+                    
           
-        
-        # moral factor
+          # warmth factor
+          s_warmth =~ start(1)*SP_warm + start(1)*SP_compassionate +
+                  start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_generous
+          
+          
+          # moral factor
           s_moral =~ start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy + 
-                 start(1)*SP_loyal +
-                 a*SP_humble + b*SP_kind + c*SP_cooperative
-                
+                   start(1)*SP_loyal
+          s_moral~~1*s_moral
         
         # bias factor
         s_bias =~ start(1)*SP_creative + start(1)*SP_intelligent +
                   start(1)*SP_attractive + start(1)*SP_socially.skilled +
-                  start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
-                  start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_cooperative +
-                  start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy +
+                  start(1)*SP_funny + start(1)*SP_warm + start(1)*SP_compassionate +
+                  start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_generous +
+                  start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy + 
                   start(1)*SP_loyal
-                  
-        # allow main factors to correlate
-        s_moral ~~ s_warmth
-        s_moral ~~ s_ability
-        s_warmth ~~ s_ability
-                    
-        # but main factors independent of bias
-        s_bias~~0*s_ability
-        s_bias~~0*s_warmth
-        s_bias~~0*s_moral
       "
 
         
@@ -330,17 +279,17 @@ lavInspect(s_bi.fit, what="std")$psi
 # model 16: informant bias -----------------------------------------------------
 i_bi = '# ability factor
         i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
-                     start(1)*i_attractive_avg + start(1)*i_socially.skilled_avg
+                   start(1)*i_attractive_avg + start(1)*i_socially.skilled_avg +
+                   start(1)*i_funny_avg
                   
         # warmth factor
-          i_warmth =~ start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
-                      x*i_humble_avg + y*i_kind_avg +z*i_cooperative_avg
+        i_warmth =~ start(1)*i_warm_avg + start(1)*i_compassionate_avg +
+                  start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_generous_avg 
         
         # moral factor
-          i_moral =~ start(1)*i_fair_avg + start(1)*i_honest_avg + 
-                     start(1)*i_trustworty_avg + start(1)*i_loyal_avg +
-                     x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
-        
+        i_moral =~ start(1)*i_fair_avg + start(1)*i_honest_avg + 
+                 start(1)*i_trustworty_avg + start(1)*i_loyal_avg
+
         # allow factors to correlate
         i_moral ~~ i_warmth
         i_moral ~~ i_ability
@@ -350,8 +299,9 @@ i_bi = '# ability factor
         # bias factor
         i_bias =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
                   start(1)*i_attractive_avg + start(1)*i_socially.skilled_avg +
-                  start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
-                  start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_cooperative_avg +
+                  start(1)*i_funny_avg +
+                  start(1)*i_warm_avg + start(1)*i_compassionate_avg +
+                  start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_generous_avg +
                   start(1)*i_fair_avg + start(1)*i_honest_avg + 
                   start(1)*i_trustworty_avg + start(1)*i_loyal_avg
                      
