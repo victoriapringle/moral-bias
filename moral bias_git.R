@@ -21,7 +21,6 @@ data =
 # ------------------------------------------------------------------------------
 # ------------------------------------ self ------------------------------------
 # model 1: ability  ------------------------------------------------------------
-# w/o fixed residuals
 s_a = '# ability factor
        ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
                   start(1)*SP_socially.skilled
