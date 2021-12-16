@@ -8,6 +8,7 @@ setwd("C:/Users/victo/OneDrive/Documents/moral bias")
 library(dplyr)   # for data cleaning & reshaping etc.
 library(psych)   # for parallel analysis
 library(ggplot2) # for plots
+library(sjPlot)
 
 
 # data -------------------------------------------------------------------------
@@ -25,7 +26,7 @@ i_items = data %>% select(ends_with("avg"))
 current_sp = sp_items[, -c(6,8:12,17,23:26)]
 current_i = i_items[, -c(1:2,8,13:16)]
 
-current_items = cbind(sp_items, i_items)
+current_items = cbind(current_sp, current_i)
 
 
 # ------------------------------------------------------------------------------
@@ -41,15 +42,14 @@ corrplot::corrplot(cs, order = "original", tl.col='black', tl.cex=.75,
 
 # parallel analysis
 fa.parallel(x=cs, fa="both")  # suggests 3 factors
-
+# can also use scree(current_sp) for just the scree plot
 
 # factor analysis
-
-fa.diagram(fa_s)  # breaks up roughly how you'd expect
-
 fa_s = fa(r = cs, nfactors = 3, 
           rotate = "oblimin", 
           fm = "pa")
+
+fa.diagram(fa_s)  # breaks up roughly how you'd expect
 
 
 ## informant -------------------------------------------------------------------
@@ -65,7 +65,7 @@ corrplot::corrplot(ci, order = "original", tl.col='black', tl.cex=.75,
   
 # parallel analysis
 fa.parallel(x=ci, fa="both")  # suggests 3 factors
-  
+
   
 # factor analysis
 fa_i = fa(r = ci, nfactors = 4, 
@@ -78,20 +78,81 @@ fa.diagram(fa_i)  # bit different than self
 # ------------------------------------------------------------------------------
 # EFA with current items, across perspectives
 # ------------------------------------------------------------------------------
+colnames(current_items) = gsub("SP_", "s_", colnames(current_items))
+colnames(current_items) = gsub("_avg", "", colnames(current_items))
 
 
+# basic correlations
+cc = cor(current_items, use = "pairwise.complete.obs")
+corrplot::corrplot(cc, order = "original", tl.col='black', tl.cex=.75,
+                   tl.srt = 45, method = "color", type="lower",  
+                   col = colorRampPalette(c('coral2', 'white', 'darkslategray3'))(10)) 
 
 
+# parallel analysis
+fa.parallel(x=cc, fa="both")  # suggests 3 factors
 
 
+# factor analysis
+fa_c = fa(r = cc, nfactors = 6, 
+          rotate = "oblimin", 
+          fm = "pa")
 
+fa.diagram(fa_c)
 
 
 
 # ------------------------------------------------------------------------------
 # EFA with all possible items
 # ------------------------------------------------------------------------------
+## self ------------------------------------------------------------------------
+colnames(sp_items) = gsub("SP_", "", colnames(sp_items))
 
+sp_items = sp_items[,-26] # rm self-esteem
+
+
+# basic correlations
+cs_all = cor(sp_items, use = "pairwise.complete.obs")
+corrplot::corrplot(cs_all, order = "original", tl.col='black', tl.cex=.75,
+                   tl.srt = 45, method = "color", type="lower",  
+                   col = colorRampPalette(c('coral2', 'white', 'darkslategray3'))(10)) 
+
+
+# parallel analysis
+fa.parallel(x=cs_all, fa="both")  # suggests 3 factors
+
+
+# factor analysis
+fa_sall = fa(r = cs_all, nfactors = 4, 
+          rotate = "oblimin", 
+          fm = "pa")
+
+fa.diagram(fa_sall)  # breaks up roughly how you'd expect
+
+
+
+## informant -------------------------------------------------------------------
+colnames(i_items) = gsub("_avg", "", colnames(i_items))
+i_items = i_items[,-1] # rm liking
+
+
+# basic correlations
+ci_all = cor(i_items, use = "pairwise.complete.obs")
+corrplot::corrplot(ci_all, order = "original", tl.col='black', tl.cex=.75,
+                   tl.srt = 45, method = "color", type="lower",  
+                   col = colorRampPalette(c('coral2', 'white', 'darkslategray3'))(10)) 
+
+
+# parallel analysis
+fa.parallel(x=ci_all, fa="both")  # suggests 3 factors
+
+
+# factor analysis
+fa_iall = fa(r = ci_all, nfactors = 3, 
+             rotate = "oblimin", 
+             fm = "pa")
+
+fa.diagram(fa_iall)  
 
 
 
