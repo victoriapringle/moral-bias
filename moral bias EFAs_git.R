@@ -206,7 +206,89 @@ fa.diagram(fa_ci2)
 
 
 
+# ------------------------------------------------------------------------------
+# EFA - moral items only
+# ------------------------------------------------------------------------------
+spmoral = 
+sp_items %>% select(c(SP_compassionate, SP_kind, SP_warm, SP_generous, SP_fair,
+                      SP_humble, SP_cooperative, SP_grateful, SP_patient, SP_loyal,
+                      SP_honest, SP_trustworthy))
 
+colnames(spmoral) = gsub("SP_", "", colnames(spmoral))
+
+
+# basic correlations
+cm = cor(spmoral, use = "pairwise.complete.obs")
+corrplot::corrplot(cm, order = "original", tl.col='black', tl.cex=.75,
+                   tl.srt = 45, method = "color", type="lower",  
+                   col = colorRampPalette(c('coral2', 'white', 'darkslategray3'))(10)) 
+
+
+# parallel analysis
+fa.parallel(x=cm, fa="both")  # suggests 1 factor
+
+
+# factor analysis
+fa_m = fa(r = cm, nfactors = 2, 
+            rotate = "oblimin", 
+            fm = "pa")
+
+fa.diagram(fa_m)  
+
+
+
+# ------------------------------------------------------------------------------
+# EFA - ability items only
+# ------------------------------------------------------------------------------
+spability = 
+  sp_items %>% select(c(SP_socially.skilled, SP_funny, SP_intelligent, SP_creative))
+
+colnames(spability) = gsub("SP_", "", colnames(spability))
+
+# basic correlations
+ca = cor(spability, use = "pairwise.complete.obs")
+corrplot::corrplot(ca, order = "original", tl.col='black', tl.cex=.75,
+                   tl.srt = 45, method = "color", type="lower",  
+                   col = colorRampPalette(c('coral2', 'white', 'darkslategray3'))(10)) 
+
+
+# parallel analysis
+fa.parallel(x=ca, fa="both")  # suggests 1 factor
+
+
+# factor analysis
+fa_a = fa(r = ca, nfactors = 1, 
+            rotate = "oblimin", 
+            fm = "pa")
+
+fa.diagram(fa_a)  
+
+
+
+
+# ------------------------------------------------------------------------------
+# EFA - above w/m/a items
+# ------------------------------------------------------------------------------
+spwma = cbind(spmoral, spability)
+spwma = spwma %>% select(-creative)
+
+# basic correlations
+cwma = cor(spwma, use = "pairwise.complete.obs")
+corrplot::corrplot(cwma, order = "original", tl.col='black', tl.cex=.75,
+                   tl.srt = 45, method = "color", type="lower",  
+                   col = colorRampPalette(c('coral2', 'white', 'darkslategray3'))(10)) 
+
+
+# parallel analysis
+fa.parallel(x=cwma, fa="both")  # suggests 1 factor
+
+
+# factor analysis
+fa_wma = fa(r = cwma, nfactors = 3, 
+          rotate = "oblimin", 
+          fm = "pa")
+
+fa.diagram(fa_wma)  
 
 
 
