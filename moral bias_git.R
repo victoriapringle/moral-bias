@@ -14,17 +14,20 @@ library(tidyverse)                 # for renaming
 data <- read.csv("impressiondata_moralbias.csv")  
 # nb. informants are aggregated (items formatted i_[trait]_avg)
 
-data = 
-data %>% rename(SP_attractive = SP_physically.attractive,
-                i_attractive_avg = i_physically.attractive_avg)
 
 # ------------------------------------------------------------------------------
 # ------------------------------------ self ------------------------------------
 # model 1: ability  ------------------------------------------------------------
+# w/o fixed residuals
 s_a = '# ability factor
        ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
+<<<<<<< HEAD
                   start(1)*SP_attractive + start(1)*SP_socially.skilled
                   
+=======
+                  start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
+                  start(1)*SP_socially.skilled
+>>>>>>> parent of f52506c (Update moral bias_git.R)
       '
 
 s_a.fit = cfa(s_a, data, missing='fiml')
@@ -37,9 +40,14 @@ semPaths(s_a.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 # model 2: warmth --------------------------------------------------------------
 s_w = '# warmth factor
+<<<<<<< HEAD
       warmth =~ start(1)*SP_warm + start(1)*SP_compassionate + start(1)*SP_cooperative + 
                 start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_generous +
                 start(1)*SP_funny
+=======
+      warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny
+      
+>>>>>>> parent of f52506c (Update moral bias_git.R)
       '
 
 s_w.fit = cfa(s_w, data, missing='fiml')
@@ -68,8 +76,13 @@ semPaths(s_m.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 # model 5: warmth, morality, ability -------------------------------------------
 s_wma = '# ability factor
         ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
+<<<<<<< HEAD
                   start(1)*SP_attractive + start(1)*SP_socially.skilled +
                   start(1)*SP_funny
+=======
+                  start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
+                  start(1)*SP_socially.skilled
+>>>>>>> parent of f52506c (Update moral bias_git.R)
                   
         
         # warmth factor
@@ -102,9 +115,14 @@ semPaths(s_wma.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 # model 6: ability  ------------------------------------------------------------ 
 i_a = '# ability factor
         ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
+<<<<<<< HEAD
                    start(1)*i_attractive_avg + start(1)*i_socially.skilled_avg +
                    start(1)*i_funny_avg
       '
+=======
+                   start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
+                   start(1)*i_socially.skilled_avg'
+>>>>>>> parent of f52506c (Update moral bias_git.R)
 
 i_a.fit = cfa(i_a, data, missing='fiml')
 summary(i_a.fit, fit.measures = TRUE, standardized = TRUE)
@@ -142,8 +160,13 @@ semPaths(i_m.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 # model 10: warmth, morality, ability ------------------------------------------
 i_wma = '# ability factor
         i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
+<<<<<<< HEAD
                    start(1)*i_attractive_avg + start(1)*i_socially.skilled_avg +
                    start(1)*i_funny_avg
+=======
+                     start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
+                     start(1)*i_socially.skilled_avg
+>>>>>>> parent of f52506c (Update moral bias_git.R)
                   
         # warmth factor
         i_warmth =~ start(1)*i_warm_avg + start(1)*i_compassionate_avg +
@@ -174,9 +197,18 @@ semPaths(i_wma.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 si_wma = '## self  --------------------------------------------------------
           # ability factor
           s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
+<<<<<<< HEAD
                     start(1)*SP_attractive + start(1)*SP_socially.skilled +
                     start(1)*SP_funny
                     
+=======
+                       start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
+                       start(1)*SP_socially.skilled
+                        
+        # warmth factor
+          s_warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
+                    a*SP_humble + b*SP_kind + c*SP_cooperative
+>>>>>>> parent of f52506c (Update moral bias_git.R)
           
           # warmth factor
           s_warmth =~ start(1)*SP_warm + start(1)*SP_compassionate +
@@ -190,12 +222,27 @@ si_wma = '## self  --------------------------------------------------------
           
           ## informant -----------------------------------------------------
           i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
+<<<<<<< HEAD
                    start(1)*i_attractive_avg + start(1)*i_socially.skilled_avg +
                    start(1)*i_funny_avg
                     
           # warmth factor
           i_warmth =~ start(1)*i_warm_avg + start(1)*i_compassionate_avg +
                     start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_generous_avg 
+=======
+                       start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
+                       start(1)*i_socially.skilled_avg
+                  
+         # warmth factor
+          i_warmth =~ start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
+                      x*i_humble_avg + y*i_kind_avg +z*i_cooperative_avg
+        
+        # moral factor
+          i_moral =~ start(1)*i_fair_avg + start(1)*i_honest_avg + 
+                     start(1)*i_trustworty_avg + start(1)*i_loyal_avg +
+                     x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
+         
+>>>>>>> parent of f52506c (Update moral bias_git.R)
           
           # moral factor
           i_moral =~ start(1)*i_fair_avg + start(1)*i_honest_avg + 
@@ -239,12 +286,23 @@ lavInspect(si_wma.fit, what="std.all")$psi
 
 
 
-# model 15: self-bias ----------------------------------------------------------
+# model 15: self-bias bifactor  ------------------------------------------------
 s_bi = "# ability factor
+<<<<<<< HEAD
           s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
                     start(1)*SP_attractive + start(1)*SP_socially.skilled +
                     start(1)*SP_funny
                     
+=======
+        s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
+                  start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
+                  start(1)*SP_socially.skilled
+                  
+        
+        # warmth factor
+          s_warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
+                    a*SP_humble + b*SP_kind + c*SP_cooperative
+>>>>>>> parent of f52506c (Update moral bias_git.R)
           
           # warmth factor
           s_warmth =~ start(1)*SP_warm + start(1)*SP_compassionate +
@@ -257,11 +315,19 @@ s_bi = "# ability factor
 
         # bias factor
         s_bias =~ start(1)*SP_creative + start(1)*SP_intelligent +
+<<<<<<< HEAD
                   start(1)*SP_attractive + start(1)*SP_socially.skilled +
                   start(1)*SP_funny + 
                   start(1)*SP_warm + start(1)*SP_compassionate +
                   start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_generous +
                   start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy + 
+=======
+                  start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
+                  start(1)*SP_socially.skilled +
+                  start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
+                  start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_cooperative +
+                  start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy +
+>>>>>>> parent of f52506c (Update moral bias_git.R)
                   start(1)*SP_loyal
         
         s_bias ~~ 0*s_moral
@@ -286,11 +352,16 @@ lavInspect(s_bi.fit, what="est")$psi
 lavInspect(s_bi.fit, what="std")$psi
 
 
-# model 16: informant bias -----------------------------------------------------
+# model 16: informant bias bifactor --------------------------------------------
 i_bi = '# ability factor
         i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
+<<<<<<< HEAD
                    start(1)*i_attractive_avg + start(1)*i_socially.skilled_avg +
                    start(1)*i_funny_avg
+=======
+                     start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
+                     start(1)*i_socially.skilled_avg
+>>>>>>> parent of f52506c (Update moral bias_git.R)
                   
         # warmth factor
         i_warmth =~ start(1)*i_warm_avg + start(1)*i_compassionate_avg +
@@ -308,10 +379,17 @@ i_bi = '# ability factor
                      
         # bias factor
         i_bias =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
+<<<<<<< HEAD
                   start(1)*i_attractive_avg + start(1)*i_socially.skilled_avg +
                   start(1)*i_funny_avg +
                   start(1)*i_warm_avg + start(1)*i_compassionate_avg +
                   start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_generous_avg +
+=======
+                  start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
+                  start(1)*i_socially.skilled_avg +
+                  start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
+                  start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_cooperative_avg +
+>>>>>>> parent of f52506c (Update moral bias_git.R)
                   start(1)*i_fair_avg + start(1)*i_honest_avg + 
                   start(1)*i_trustworty_avg + start(1)*i_loyal_avg
                      
@@ -333,11 +411,12 @@ lavInspect(i_bi.fit, what="std")$psi
 
 
 
-# model 17: agreement post-bias ------------------------------------------------
+# model 17: agreement post-bias BIFACTOR  --------------------------------------
 si_bi = '## self  --------------------------------------------------------
           # ability factor
           s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
-                  start(1)*SP_attractive + start(1)*SP_socially.skilled
+                       start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
+                       start(1)*SP_socially.skilled
                         
          # warmth factor
           s_warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
