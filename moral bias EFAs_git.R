@@ -23,7 +23,7 @@ i_items = data %>% select(ends_with("avg"))
 
 # subset to the items we're currently using to conduct EFAs on current pool
 current_sp = sp_items[, -c(6,8:12,17,23:26)]
-current_i = i_items[, -c(1,7,12:16)]
+current_i = i_items[, -c(1:2,8,13:16)]
 
 current_items = cbind(sp_items, i_items)
 
@@ -44,55 +44,35 @@ fa.parallel(x=cs, fa="both")  # suggests 3 factors
 
 
 # factor analysis
+
+fa.diagram(fa_s)  # breaks up roughly how you'd expect
+
 fa_s = fa(r = cs, nfactors = 3, 
           rotate = "oblimin", 
           fm = "pa")
 
-fa.diagram(fa_s)  # breaks up roughly how you'd expect
-
-
-# first create a df of the loadings on the 3 extracted factors
-loadings_s = xtable::xtable(unclass(fa_s$loadings))
-loadings_s = tibble::rownames_to_column(loadings_s, "trait")   # make rownames (cue) a col
-loadings_s$trait = factor(loadings_s$trait, loadings_s$trait)
-
-
-# then reshape it to long format for the barplot
-loadings_s.m <- reshape2::melt(loadings_s, id="trait", 
-                             measure=c("PA1", "PA2", "PA3"), 
-                             variable.name="Factor", value.name="Loading")
-
-
-# then plot the barplot
-# this code is lifted from https://rpubs.com/danmirman/plotting_factor_analysis
-loadings_s.m$trait = gsub("SP_", "", loadings_s.m$trait)
-
-  ggplot(loadings_s.m, aes(x=reorder(trait,Loading), abs(Loading), fill=Loading)) + 
-  facet_wrap(~ Factor, nrow=1) + # place the factors in separate facets
-  geom_bar(stat="identity") +    # make the bars
-  coord_flip() +                 # flip the axes so the cues are horizontal  
-  # define the fill color gradient: blue=pos, red=neg
-  scale_fill_gradient2(name = "Loading", 
-                       high = "darkslategray3", mid = "white", low = "coral2", 
-                       midpoint=0, guide="none") +
-  ylab("Loading strength") +     # change y-axis label
-  theme_bw(base_size=10) +       # use a b&w theme with set font size
-  labs(title = "Factor loadings of all traits for 3 extracted factors",
-       caption = "NB. PA1 is correlated with PA3, r = .4")
-
-
-
-
-
-
-
 
 ## informant -------------------------------------------------------------------
+colnames(current_i) = gsub("i_", "", colnames(current_i))
+colnames(current_i) = gsub("_avg", "", colnames(current_i))
+  
+# basic correlations
+ci = cor(current_i, use = "pairwise.complete.obs")
+corrplot::corrplot(ci, order = "original", tl.col='black', tl.cex=.75,
+                   tl.srt = 45, method = "color", type="lower",  
+                   col = colorRampPalette(c('coral2', 'white', 'darkslategray3'))(10)) 
+  
+  
+# parallel analysis
+fa.parallel(x=ci, fa="both")  # suggests 3 factors
+  
+  
+# factor analysis
+fa_i = fa(r = ci, nfactors = 4, 
+            rotate = "oblimin", 
+            fm = "pa")
 
-
-
-
-
+fa.diagram(fa_i)  # bit different than self
 
 
 # ------------------------------------------------------------------------------
