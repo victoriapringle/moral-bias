@@ -205,13 +205,19 @@ fa.diagram(fa_ci2)
 
 
 
+# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+
+
 
 # ------------------------------------------------------------------------------
 # EFA - moral items only
 # ------------------------------------------------------------------------------
 spmoral = 
 sp_items %>% select(c(SP_compassionate, SP_kind, SP_warm, SP_generous, SP_fair,
-                      SP_humble, SP_cooperative, SP_grateful, SP_patient, SP_loyal,
+                      SP_humble, SP_cooperative, SP_loyal,
                       SP_honest, SP_trustworthy))
 
 colnames(spmoral) = gsub("SP_", "", colnames(spmoral))
@@ -270,7 +276,6 @@ fa.diagram(fa_a)
 # EFA - above w/m/a items
 # ------------------------------------------------------------------------------
 spwma = cbind(spmoral, spability)
-spwma = spwma %>% select(-creative)
 
 # basic correlations
 cwma = cor(spwma, use = "pairwise.complete.obs")
@@ -290,9 +295,98 @@ fa_wma = fa(r = cwma, nfactors = 3,
 
 fa.diagram(fa_wma)  
 
+fa_wma$loadings
 
 
 
+# ------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+# repeat with informants
+
+# ------------------------------------------------------------------------------
+# EFA - moral items only
+# ------------------------------------------------------------------------------
+imoral = 
+  i_items %>% select(c(i_compassionate_avg, i_kind_avg, i_warm_avg, i_generous_avg,
+                       i_fair_avg, i_humble_avg, i_cooperative_avg, 
+                       i_loyal_avg, i_honest_avg, i_trustworthy_avg))
+
+colnames(imoral) = gsub("_avg", "", colnames(imoral))
+
+
+# basic correlations
+cmi = cor(imoral, use = "pairwise.complete.obs")
+corrplot::corrplot(cmi, order = "original", tl.col='black', tl.cex=.75,
+                   tl.srt = 45, method = "color", type="lower",  
+                   col = colorRampPalette(c('coral2', 'white', 'darkslategray3'))(10)) 
+
+
+# parallel analysis
+fa.parallel(x=cmi, fa="both")  # suggests 1 factor
+
+
+# factor analysis
+fa_mi = fa(r = cmi, nfactors = 2, 
+          rotate = "oblimin", 
+          fm = "pa")
+
+fa.diagram(fa_mi)  
+
+
+
+# ------------------------------------------------------------------------------
+# EFA - ability items only
+# ------------------------------------------------------------------------------
+iability = 
+  i_items %>% select(c(i_socially.skilled_avg, i_funny_avg, i_intelligent_avg, i_creative_avg))
+
+colnames(iability) = gsub("_avg", "", colnames(iability))
+
+# basic correlations
+cai = cor(iability, use = "pairwise.complete.obs")
+corrplot::corrplot(cai, order = "original", tl.col='black', tl.cex=.75,
+                   tl.srt = 45, method = "color", type="lower",  
+                   col = colorRampPalette(c('coral2', 'white', 'darkslategray3'))(10)) 
+
+
+# parallel analysis
+fa.parallel(x=cai, fa="both")  # suggests 1 factor
+
+
+# factor analysis
+fa_ai = fa(r = cai, nfactors = 1, 
+          rotate = "oblimin", 
+          fm = "pa")
+
+fa.diagram(fa_ai)  
+
+
+
+
+# ------------------------------------------------------------------------------
+# EFA - above w/m/a items
+# ------------------------------------------------------------------------------
+iwma = cbind(imoral, iability)
+
+# basic correlations
+ciwma = cor(iwma, use = "pairwise.complete.obs")
+corrplot::corrplot(ciwma, order = "original", tl.col='black', tl.cex=.75,
+                   tl.srt = 45, method = "color", type="lower",  
+                   col = colorRampPalette(c('coral2', 'white', 'darkslategray3'))(10)) 
+
+
+# parallel analysis
+fa.parallel(x=ciwma, fa="both")  # suggests 1 factor
+
+
+# factor analysis
+fa_iwma = fa(r = ciwma, nfactors = 3, 
+            rotate = "oblimin", 
+            fm = "pa")
+
+fa.diagram(fa_iwma)  
+
+fa_iwma$loadings
 
 
 
