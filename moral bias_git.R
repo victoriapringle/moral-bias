@@ -7,7 +7,7 @@ setwd("C:/Users/victo/OneDrive/Documents/moral bias")
 # libraries  -------------------------------------------------------------------
 library(lavaan)                    # for running the models
 library(semPlot)                   # for plotting the sem graphs
-#library(tidyverse)                # for renaming
+library(tidyverse)                 # for renaming
 
 
 # data -------------------------------------------------------------------------
@@ -23,8 +23,8 @@ data %>% rename(SP_attractive = SP_physically.attractive,
 # model 1: ability  ------------------------------------------------------------
 s_a = '# ability factor
        ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
-                  start(1)*SP_attractive + start(1)*SP_socially.skilled +
-                  start(1)*SP_funny
+                  start(1)*SP_attractive + start(1)*SP_socially.skilled
+                  
       '
 
 s_a.fit = cfa(s_a, data, missing='fiml')
@@ -37,8 +37,9 @@ semPaths(s_a.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 # model 2: warmth --------------------------------------------------------------
 s_w = '# warmth factor
-      warmth =~ start(1)*SP_warm + start(1)*SP_compassionate +
-                start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_generous
+      warmth =~ start(1)*SP_warm + start(1)*SP_compassionate + start(1)*SP_cooperative + 
+                start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_generous +
+                start(1)*SP_funny
       '
 
 s_w.fit = cfa(s_w, data, missing='fiml')
@@ -253,15 +254,24 @@ s_bi = "# ability factor
           # moral factor
           s_moral =~ start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy + 
                    start(1)*SP_loyal
-          s_moral~~1*s_moral
-        
+
         # bias factor
         s_bias =~ start(1)*SP_creative + start(1)*SP_intelligent +
                   start(1)*SP_attractive + start(1)*SP_socially.skilled +
-                  start(1)*SP_funny + start(1)*SP_warm + start(1)*SP_compassionate +
+                  start(1)*SP_funny + 
+                  start(1)*SP_warm + start(1)*SP_compassionate +
                   start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_generous +
                   start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy + 
                   start(1)*SP_loyal
+        
+        s_bias ~~ 0*s_moral
+        s_bias ~~ 0*s_warmth
+        s_bias ~~ 0*s_ability
+        
+        s_moral~~0*s_ability
+        s_warmth~~0*s_ability
+        s_warmth~~0*s_moral
+                  
       "
 
         
