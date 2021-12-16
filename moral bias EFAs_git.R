@@ -156,3 +156,65 @@ fa.diagram(fa_iall)
 
 
 
+
+# ------------------------------------------------------------------------------
+# EFA but rm disorganized and self-disc
+# ------------------------------------------------------------------------------
+## self ------------------------------------------------------------------------
+sp_items = select(sp_items, -c(disorganized, selfdiciplined))  # rm the 2 items
+
+# basic correlations
+cs2 = cor(sp_items, use = "pairwise.complete.obs")
+corrplot::corrplot(cs2, order = "original", tl.col='black', tl.cex=.75,
+                   tl.srt = 45, method = "color", type="lower",  
+                   col = colorRampPalette(c('coral2', 'white', 'darkslategray3'))(10)) 
+
+
+# parallel analysis
+fa.parallel(x=cs2, fa="both")  
+
+
+# factor analysis
+fa_s2 = fa(r = cs2, nfactors = 4, 
+             rotate = "oblimin", 
+             fm = "pa")
+
+fa.diagram(fa_s2)  
+
+
+## informant -------------------------------------------------------------------
+i_items = select(i_items, -c(i_disorganized, i_selfdiciplined))  # rm the 2 items
+
+# basic correlations
+ci2 = cor(i_items, use = "pairwise.complete.obs")
+corrplot::corrplot(ci2, order = "original", tl.col='black', tl.cex=.75,
+                   tl.srt = 45, method = "color", type="lower",  
+                   col = colorRampPalette(c('coral2', 'white', 'darkslategray3'))(10)) 
+
+
+# parallel analysis
+fa.parallel(x=ci2, fa="both")  # suggests 1 factor
+
+
+# factor analysis
+fa_ci2 = fa(r = ci2, nfactors = 4, 
+           rotate = "oblimin", 
+           fm = "pa")
+
+fa.diagram(fa_ci2)  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
