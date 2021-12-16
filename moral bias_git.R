@@ -189,7 +189,12 @@ semPaths(i_wma.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 si_wma = '## self  --------------------------------------------------------
           # ability factor
           s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
-                     start(1)*SP_socially.skilled 
+                     start(1)*SP_socially.skilled
+                     
+                     
+          # dealing w/ neg residual
+          SP_socially.skilled ~~ 1*SP_socially.skilled
+
                         
           # warmth factor
           s_warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
@@ -204,6 +209,10 @@ si_wma = '## self  --------------------------------------------------------
           ## informant -----------------------------------------------------
           i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
                    start(1)*i_socially.skilled_avg 
+                   
+                   
+          # dealing w/ neg residual
+          i_socially.skilled_avg ~~ 1*i_socially.skilled_avg
                    
           # warmth factor
           i_warmth =~ start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
@@ -258,6 +267,12 @@ s_bi = "# ability factor
           s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
                     start(1)*SP_socially.skilled 
                         
+           # dealing w/ neg residual
+          SP_socially.skilled ~~ 1*SP_socially.skilled
+          
+           # dealing w/ neg residual
+          SP_intelligent ~~ 1*SP_intelligent
+                        
           # warmth factor
           s_warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
                     a*SP_humble + b*SP_kind + c*SP_cooperative
@@ -298,45 +313,32 @@ lavInspect(s_bi.fit, what="std")$psi
 
 
 # model 16: informant bias bifactor --------------------------------------------
-i_bi = '# ability factor
-        i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
-<<<<<<< HEAD
-                   start(1)*i_attractive_avg + start(1)*i_socially.skilled_avg +
-                   start(1)*i_funny_avg
-=======
-                     start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
-                     start(1)*i_socially.skilled_avg
->>>>>>> parent of f52506c (Update moral bias_git.R)
-                  
-        # warmth factor
-        i_warmth =~ start(1)*i_warm_avg + start(1)*i_compassionate_avg +
-                  start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_generous_avg 
+i_bi = 'i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
+                   start(1)*i_socially.skilled_avg 
+                   
+                   
+          # dealing w/ neg residual
+          i_socially.skilled_avg ~~ 1*i_socially.skilled_avg
+                   
+          # warmth factor
+          i_warmth =~ start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
+                      x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
         
-        # moral factor
-        i_moral =~ start(1)*i_fair_avg + start(1)*i_honest_avg + 
-                 start(1)*i_trustworty_avg + start(1)*i_loyal_avg
+          # moral factor
+          i_moral =~ start(1)*i_fair_avg + start(1)*i_honest_avg + 
+                   start(1)*i_trustworty_avg + start(1)*i_loyal_avg +
+                   x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
 
-        # allow factors to correlate
-        i_moral ~~ i_warmth
-        i_moral ~~ i_ability
-        i_warmth ~~ i_ability
         
                      
         # bias factor
         i_bias =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
-<<<<<<< HEAD
-                  start(1)*i_attractive_avg + start(1)*i_socially.skilled_avg +
-                  start(1)*i_funny_avg +
-                  start(1)*i_warm_avg + start(1)*i_compassionate_avg +
-                  start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_generous_avg +
-=======
-                  start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
-                  start(1)*i_socially.skilled_avg +
-                  start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
-                  start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_cooperative_avg +
->>>>>>> parent of f52506c (Update moral bias_git.R)
-                  start(1)*i_fair_avg + start(1)*i_honest_avg + 
-                  start(1)*i_trustworty_avg + start(1)*i_loyal_avg
+                   start(1)*i_socially.skilled_avg + 
+                   start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
+                   start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_cooperative_avg +
+                   start(1)*i_fair_avg + start(1)*i_honest_avg + 
+                   start(1)*i_trustworty_avg + start(1)*i_loyal_avg 
+                      
                      
         # main factors independent of bias
         i_bias~~0*i_ability
@@ -360,53 +362,59 @@ lavInspect(i_bi.fit, what="std")$psi
 si_bi = '## self  --------------------------------------------------------
           # ability factor
           s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
-                       start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
-                       start(1)*SP_socially.skilled
+                    start(1)*SP_socially.skilled 
                         
-         # warmth factor
+           # dealing w/ neg residual
+          SP_socially.skilled ~~ v*SP_socially.skilled
+          v>0
+                        
+          # warmth factor
           s_warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
                     a*SP_humble + b*SP_kind + c*SP_cooperative
-          
-        
-         # moral factor
+
+          # moral factor
           s_moral =~ start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy + 
-                 start(1)*SP_loyal +
-                 a*SP_humble + b*SP_kind + c*SP_cooperative
-          
-          
-          # bias factor
-          s_bias =~ start(1)*SP_creative + start(1)*SP_intelligent +
-                    start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
-                    start(1)*SP_socially.skilled +
-                    start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
-                    start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_cooperative +
-                    start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy +
-                    start(1)*SP_loyal
+                   start(1)*SP_loyal +
+                   a*SP_humble + b*SP_kind + c*SP_cooperative
+
+        # bias factor
+        s_bias =~  start(1)*SP_creative + start(1)*SP_intelligent +
+                  start(1)*SP_socially.skilled +
+                  start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
+                  start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_cooperative +
+                  start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy +
+                  start(1)*SP_loyal 
           
           
           ## informant -----------------------------------------------------
-          # ability factor
           i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
-                       start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
-                       start(1)*i_socially.skilled_avg
-                  
+                   start(1)*i_socially.skilled_avg 
+                   
+                   
+          # dealing w/ neg residual
+          i_socially.skilled_avg ~~ v*i_socially.skilled_avg
+          v>0
+                        
+                   
           # warmth factor
           i_warmth =~ start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
-                      x*i_humble_avg + y*i_kind_avg +z*i_cooperative_avg
+                      x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
         
           # moral factor
           i_moral =~ start(1)*i_fair_avg + start(1)*i_honest_avg + 
-                     start(1)*i_trustworty_avg + start(1)*i_loyal_avg +
-                     x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
-          
-          # bias factor
-          i_bias =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
-                    start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
-                    start(1)*i_socially.skilled_avg +
-                    start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
-                    start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_cooperative_avg +
-                    start(1)*i_fair_avg + start(1)*i_honest_avg + 
-                    start(1)*i_trustworty_avg + start(1)*i_loyal_avg
+                   start(1)*i_trustworty_avg + start(1)*i_loyal_avg +
+                   x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
+
+        
+                     
+        # bias factor
+        i_bias =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
+                   start(1)*i_socially.skilled_avg + 
+                   start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
+                   start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_cooperative_avg +
+                   start(1)*i_fair_avg + start(1)*i_honest_avg + 
+                   start(1)*i_trustworty_avg + start(1)*i_loyal_avg 
+                      
                        
           
           # agreement ----------------------------------------------------------
