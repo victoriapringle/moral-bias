@@ -241,8 +241,6 @@ s_bi = "# ability factor
           # moral factor
           s_moral =~ start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
           
-          s_moral ~~ 1*s_moral
-          
           # bias factor
           s_bias =~ start(1)*SP_creative + start(1)*SP_intelligent +
                       start(1)*SP_socially.skilled + start(1)*SP_funny +
@@ -254,12 +252,7 @@ s_bi = "# ability factor
           s_bias ~~ 0*s_moral
           s_bias ~~ 0*s_warmth
           s_bias ~~ 0*s_ability
-          
-          s_moral~~0*s_ability
-          s_warmth~~0*s_ability
-          s_warmth~~0*s_moral
-                  
-      "
+          "
 
         
 
@@ -327,7 +320,7 @@ lavInspect(i_bi.fit, what="std")$psi
 # model 17: agreement post-bias BIFACTOR  --------------------------------------
 si_bi = '## self  --------------------------------------------------------
           # ability factor
-          s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
+         s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
                     start(1)*SP_socially.skilled + start(1)*SP_funny
           
           
@@ -340,16 +333,13 @@ si_bi = '## self  --------------------------------------------------------
           # moral factor
           s_moral =~ start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
           
-          
           # bias factor
           s_bias =~ start(1)*SP_creative + start(1)*SP_intelligent +
                       start(1)*SP_socially.skilled + start(1)*SP_funny +
                       start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
                       start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
                       start(1)*SP_cooperative +
-                      start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal +
-                      start(1)*SP_selfesteem
-          
+                      start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
           
           
          ## informant -----------------------------------------------------
@@ -363,9 +353,11 @@ si_bi = '## self  --------------------------------------------------------
                     start(1)*i_fair_avg + start(1)*i_humble_avg +
                     start(1)*i_cooperative_avg
                     
+          i_compassionate_avg ~~ 1*i_compassionate_avg
+          
           # moral factor
           i_moral =~ start(1)*i_honest_avg + start(1)*i_trustworty_avg + 
-          start(1)*i_loyal_avg
+                    start(1)*i_loyal_avg
           
                      
           # bias factor
@@ -376,8 +368,7 @@ si_bi = '## self  --------------------------------------------------------
                     start(1)*i_fair_avg + start(1)*i_humble_avg +
                     start(1)*i_cooperative_avg +
                     start(1)*i_honest_avg + start(1)*i_trustworty_avg + 
-                    start(1)*i_loyal_avg +
-                    start(1)*i_like_avg
+                    start(1)*i_loyal_avg
                      
                     
           # agreement ----------------------------------------------------------
