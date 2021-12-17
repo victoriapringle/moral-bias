@@ -284,6 +284,7 @@ i_bi = '# ability factor
                     start(1)*i_fair_avg + start(1)*i_humble_avg +
                     start(1)*i_cooperative_avg
                     
+          i_compassionate_avg ~~ 1*i_compassionate_avg
           
           # moral factor
           i_moral =~ start(1)*i_honest_avg + start(1)*i_trustworty_avg + 
@@ -346,7 +347,8 @@ si_bi = '## self  --------------------------------------------------------
                       start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
                       start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
                       start(1)*SP_cooperative +
-                      start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
+                      start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal +
+                      start(1)*SP_selfesteem
           
           
           
@@ -361,7 +363,6 @@ si_bi = '## self  --------------------------------------------------------
                     start(1)*i_fair_avg + start(1)*i_humble_avg +
                     start(1)*i_cooperative_avg
                     
-          
           # moral factor
           i_moral =~ start(1)*i_honest_avg + start(1)*i_trustworty_avg + 
           start(1)*i_loyal_avg
@@ -375,30 +376,14 @@ si_bi = '## self  --------------------------------------------------------
                     start(1)*i_fair_avg + start(1)*i_humble_avg +
                     start(1)*i_cooperative_avg +
                     start(1)*i_honest_avg + start(1)*i_trustworty_avg + 
-                    start(1)*i_loyal_avg
+                    start(1)*i_loyal_avg +
+                    start(1)*i_like_avg
                      
                     
           # agreement ----------------------------------------------------------
           s_warmth ~~ i_warmth
           s_moral ~~ i_moral
           s_ability ~~ i_ability
-          
-          # force independence of main factors except for the agreement
-          s_warmth ~~ 0*s_moral
-          s_warmth ~~ 0*s_ability
-          s_warmth ~~ 0*i_moral
-          s_warmth ~~ 0*i_ability
-          
-          s_moral ~~ 0*s_ability
-          s_moral ~~ 0*i_ability
-          s_moral ~~ 0*i_warmth
-          
-          s_ability ~~ 0*i_warmth
-          s_ability ~~ 0*i_moral
-          
-          i_warmth ~~ 0*i_moral
-          i_warmth ~~ 0*i_ability
-          i_moral ~~ 0*i_ability
           
           # bias factors independent
           i_bias ~~ 0*s_bias
