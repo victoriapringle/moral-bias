@@ -187,10 +187,7 @@ si_wma = '## self  --------------------------------------------------------
           # moral factor
           s_moral =~ start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
           
-          # allow factors to correlate
-          s_moral ~~ s_warmth
-          s_moral ~~ s_ability
-          s_warmth ~~ s_ability
+          
           
           ## informant -----------------------------------------------------
           # ability factor
@@ -208,15 +205,27 @@ si_wma = '## self  --------------------------------------------------------
           i_moral =~ start(1)*i_honest_avg + start(1)*i_trustworty_avg + 
           start(1)*i_loyal_avg
           
-          # allow factors to correlate
-          i_moral ~~ i_warmth
-          i_moral ~~ i_ability
-          i_warmth ~~ i_ability
           
           # agreement ----------------------------------------------------------
           s_warmth ~~ i_warmth
           s_moral ~~ i_moral
           s_ability ~~ i_ability
+          
+           s_warmth ~~ 0*s_moral
+          s_warmth ~~ 0*s_ability
+          s_warmth ~~ 0*i_moral
+          s_warmth ~~ 0*i_ability
+          
+          s_moral ~~ 0*s_ability
+          s_moral ~~ 0*i_ability
+          s_moral ~~ 0*i_warmth
+          
+          s_ability ~~ 0*i_warmth
+          s_ability ~~ 0*i_moral
+          
+          i_warmth ~~ 0*i_moral
+          i_warmth ~~ 0*i_ability
+          i_moral ~~ 0*i_ability
           '
 
 si_wma.fit = cfa(si_wma, data, missing='fiml')
@@ -239,10 +248,11 @@ s_bi = "# ability factor
           s_warmth =~ start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
                     start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
                     start(1)*SP_cooperative
-          
+                    
           
           # moral factor
           s_moral =~ start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
+          
           
           # bias factor
           s_bias =~ start(1)*SP_creative + start(1)*SP_intelligent +
@@ -255,6 +265,11 @@ s_bi = "# ability factor
           s_bias ~~ 0*s_moral
           s_bias ~~ 0*s_warmth
           s_bias ~~ 0*s_ability
+          
+          s_moral ~~ 0*s_warmth
+          s_moral ~~ 0*s_ability
+          s_ability ~~ 0*s_warmth
+          
           "
 
         
@@ -280,7 +295,7 @@ i_bi = '# ability factor
                     start(1)*i_fair_avg + start(1)*i_humble_avg +
                     start(1)*i_cooperative_avg
                     
-          i_compassionate_avg ~~ 1*i_compassionate_avg
+          i_compassionate_avg ~~ 0*i_compassionate_avg
           
           # moral factor
           i_moral =~ start(1)*i_honest_avg + start(1)*i_trustworty_avg + 
@@ -302,6 +317,11 @@ i_bi = '# ability factor
         i_bias~~0*i_ability
         i_bias~~0*i_warmth
         i_bias~~0*i_moral
+        
+        
+        i_moral ~~ 0*i_warmth
+        i_moral ~~ 0*i_ability
+        i_ability ~~ 0*i_warmth
         
           '
 
