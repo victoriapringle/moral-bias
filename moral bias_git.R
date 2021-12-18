@@ -62,6 +62,7 @@ semPaths(s_m.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 
 
+
 # model 5: warmth, morality, ability -------------------------------------------
 s_wma = '# ability factor
         ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
@@ -90,6 +91,8 @@ summary(s_wma.fit, fit.measures = TRUE, standardized = TRUE)
 
 semPaths(s_wma.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
          style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
+
+
 
 
 
