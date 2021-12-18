@@ -300,9 +300,6 @@ i_bi = '# ability factor
         i_bias~~0*i_warmth
         i_bias~~0*i_moral
         
-        i_moral~~0*i_ability
-        i_warmth~~0*i_ability
-        i_warmth~~0*i_moral
           '
 
 
@@ -333,6 +330,9 @@ si_bi = '## self  --------------------------------------------------------
           # moral factor
           s_moral =~ start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
           
+          SP_loyal ~~ 0*SP_loyal
+          
+          
           # bias factor
           s_bias =~ start(1)*SP_creative + start(1)*SP_intelligent +
                       start(1)*SP_socially.skilled + start(1)*SP_funny +
@@ -346,6 +346,8 @@ si_bi = '## self  --------------------------------------------------------
          # ability factor
           i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
                      start(1)*i_socially.skilled_avg + start(1)*i_funny_avg 
+                     
+          i_socially.skilled_avg ~~ 0*i_socially.skilled_avg
   
           # warmth factor
           i_warmth =~ start(1)*i_compassionate_avg + start(1)*i_kind_avg + 
@@ -353,7 +355,7 @@ si_bi = '## self  --------------------------------------------------------
                     start(1)*i_fair_avg + start(1)*i_humble_avg +
                     start(1)*i_cooperative_avg
                     
-          i_compassionate_avg ~~ 1*i_compassionate_avg
+          i_compassionate_avg ~~ 0*i_compassionate_avg
           
           # moral factor
           i_moral =~ start(1)*i_honest_avg + start(1)*i_trustworty_avg + 
@@ -394,6 +396,21 @@ si_bi = '## self  --------------------------------------------------------
           s_bias~~0*s_moral
           s_bias~~0*i_moral
           
+          i_ability ~~ 0*i_warmth
+          i_ability ~~ 0*i_moral
+          i_ability ~~ 0*s_warmth
+          i_ability ~~ 0*s_moral
+          
+          i_warmth ~~ 0*i_moral
+          i_warmth ~~ 0*s_moral
+          i_warmth ~~ 0*s_ability
+          
+          i_moral ~~ 0*s_warmth
+          i_moral ~~ 0*s_ability
+          
+          s_moral ~~ 0*s_ability
+          s_moral ~~ 0*s_warmth
+          s_warmth ~~ 0*s_ability
           '
 
 
