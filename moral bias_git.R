@@ -38,7 +38,7 @@ semPaths(s_a.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 s_w = '# warmth factor
       warmth =~ start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
                 start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
-                start(1)*SP_cooperative
+                start(1)*SP_cooperative + start(1)*SP_patient
       '
 
 s_w.fit = cfa(s_w, data, missing='fiml')
@@ -72,7 +72,7 @@ s_wma = '# ability factor
         # warmth factor
         warmth =~ start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
                   start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
-                  start(1)*SP_cooperative
+                  start(1)*SP_cooperative + start(1)*SP_patient
         
         
         # moral factor
@@ -116,7 +116,7 @@ i_w = '# warmth factor
        i_warmth =~ start(1)*i_compassionate_avg + start(1)*i_kind_avg + 
                   start(1)*i_warm_avg + start(1)*i_generous_avg + 
                   start(1)*i_fair_avg + start(1)*i_humble_avg +
-                  start(1)*i_cooperative_avg
+                  start(1)*i_cooperative_avg + start(1)*i_patient_avg 
                   
       '
 
@@ -147,7 +147,7 @@ i_wma = '# ability factor
         i_warmth =~ start(1)*i_compassionate_avg + start(1)*i_kind_avg + 
                   start(1)*i_warm_avg + start(1)*i_generous_avg + 
                   start(1)*i_fair_avg + start(1)*i_humble_avg +
-                  start(1)*i_cooperative_avg
+                  start(1)*i_cooperative_avg + start(1)*i_patient_avg
                   
         
         # moral factor
@@ -181,7 +181,7 @@ si_wma = '## self  --------------------------------------------------------
           # warmth factor
           s_warmth =~ start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
                     start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
-                    start(1)*SP_cooperative
+                    start(1)*SP_cooperative + start(1)*SP_patient
           
           
           # moral factor
@@ -198,7 +198,7 @@ si_wma = '## self  --------------------------------------------------------
           i_warmth =~ start(1)*i_compassionate_avg + start(1)*i_kind_avg + 
                     start(1)*i_warm_avg + start(1)*i_generous_avg + 
                     start(1)*i_fair_avg + start(1)*i_humble_avg +
-                    start(1)*i_cooperative_avg
+                    start(1)*i_cooperative_avg + start(1)*i_patient_avg
                     
           
           # moral factor
@@ -247,11 +247,14 @@ s_bi = "# ability factor
           # warmth factor
           s_warmth =~ start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
                     start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
-                    start(1)*SP_cooperative
+                    start(1)*SP_cooperative + start(1)*SP_patient
                     
           
           # moral factor
           s_moral =~ start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
+          
+          # loyal residual fixed to 0 
+          SP_loyal ~~ 0*SP_loyal
           
           
           # bias factor
@@ -260,7 +263,7 @@ s_bi = "# ability factor
                       start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
                       start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
                       start(1)*SP_cooperative +
-                      start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
+                      start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal + start(1)*SP_patient
           
           s_bias ~~ 0*s_moral
           s_bias ~~ 0*s_warmth
@@ -293,15 +296,15 @@ i_bi = '# ability factor
           i_warmth =~ start(1)*i_compassionate_avg + start(1)*i_kind_avg + 
                     start(1)*i_warm_avg + start(1)*i_generous_avg + 
                     start(1)*i_fair_avg + start(1)*i_humble_avg +
-                    start(1)*i_cooperative_avg
+                    start(1)*i_cooperative_avg + start(1)*i_patient_avg
                     
+          # compassionate residual fixed to 0 
           i_compassionate_avg ~~ 0*i_compassionate_avg
           
           # moral factor
           i_moral =~ start(1)*i_honest_avg + start(1)*i_trustworty_avg + 
           start(1)*i_loyal_avg
 
-        
                      
         # bias factor
         i_bias =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
@@ -309,9 +312,9 @@ i_bi = '# ability factor
                   start(1)*i_compassionate_avg + start(1)*i_kind_avg + 
                   start(1)*i_warm_avg + start(1)*i_generous_avg + 
                   start(1)*i_fair_avg + start(1)*i_humble_avg +
-                  start(1)*i_cooperative_avg +
+                  start(1)*i_cooperative_avg + start(1)*i_patient_avg + 
                   start(1)*i_honest_avg + start(1)*i_trustworty_avg + 
-                  start(1)*i_loyal_avg
+                  start(1)*i_loyal_avg 
                       
         # main factors independent of bias
         i_bias~~0*i_ability
@@ -347,7 +350,7 @@ si_bi = '## self  --------------------------------------------------------
           # warmth factor
           s_warmth =~ start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
                     start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
-                    start(1)*SP_cooperative
+                    start(1)*SP_cooperative + start(1)*SP_patient
           
           
           # moral factor
@@ -361,7 +364,7 @@ si_bi = '## self  --------------------------------------------------------
                       start(1)*SP_socially.skilled + start(1)*SP_funny +
                       start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
                       start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
-                      start(1)*SP_cooperative +
+                      start(1)*SP_cooperative + start(1)*SP_patient +
                       start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
           
           
@@ -376,7 +379,7 @@ si_bi = '## self  --------------------------------------------------------
           i_warmth =~ start(1)*i_compassionate_avg + start(1)*i_kind_avg + 
                     start(1)*i_warm_avg + start(1)*i_generous_avg + 
                     start(1)*i_fair_avg + start(1)*i_humble_avg +
-                    start(1)*i_cooperative_avg
+                    start(1)*i_cooperative_avg + start(1)*i_patient_avg
                     
           i_compassionate_avg ~~ 0*i_compassionate_avg
           
@@ -391,9 +394,9 @@ si_bi = '## self  --------------------------------------------------------
                     start(1)*i_compassionate_avg + start(1)*i_kind_avg + 
                     start(1)*i_warm_avg + start(1)*i_generous_avg + 
                     start(1)*i_fair_avg + start(1)*i_humble_avg +
-                    start(1)*i_cooperative_avg +
+                    start(1)*i_cooperative_avg + start(1)*i_patient_avg +
                     start(1)*i_honest_avg + start(1)*i_trustworty_avg + 
-                    start(1)*i_loyal_avg
+                    start(1)*i_loyal_avg 
                      
                     
           # agreement ----------------------------------------------------------
