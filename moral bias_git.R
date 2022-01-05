@@ -177,7 +177,6 @@ si_wma = '## self  --------------------------------------------------------
           s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
                     start(1)*SP_socially.skilled + start(1)*SP_funny
           
-          
           # warmth factor
           s_warmth =~ start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
                     start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
@@ -186,7 +185,6 @@ si_wma = '## self  --------------------------------------------------------
           
           # moral factor
           s_moral =~ start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
-          
           
           
           ## informant -----------------------------------------------------
@@ -200,7 +198,6 @@ si_wma = '## self  --------------------------------------------------------
                     start(1)*i_fair_avg + start(1)*i_humble_avg +
                     start(1)*i_cooperative_avg + start(1)*i_patient_avg
                     
-          
           # moral factor
           i_moral =~ start(1)*i_honest_avg + start(1)*i_trustworty_avg + 
           start(1)*i_loyal_avg
@@ -211,7 +208,8 @@ si_wma = '## self  --------------------------------------------------------
           s_moral ~~ i_moral
           s_ability ~~ i_ability
           
-           s_warmth ~~ 0*s_moral
+          # factors are independent except agreement
+          s_warmth ~~ 0*s_moral
           s_warmth ~~ 0*s_ability
           s_warmth ~~ 0*i_moral
           s_warmth ~~ 0*i_ability
@@ -356,6 +354,7 @@ si_bi = '## self  --------------------------------------------------------
           # moral factor
           s_moral =~ start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
           
+          # loyal residual fixed to 0
           SP_loyal ~~ 0*SP_loyal
           
           
@@ -373,6 +372,7 @@ si_bi = '## self  --------------------------------------------------------
           i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
                      start(1)*i_socially.skilled_avg + start(1)*i_funny_avg 
                      
+          # socially skilled residual fixed to 0
           i_socially.skilled_avg ~~ 0*i_socially.skilled_avg
   
           # warmth factor
@@ -381,6 +381,7 @@ si_bi = '## self  --------------------------------------------------------
                     start(1)*i_fair_avg + start(1)*i_humble_avg +
                     start(1)*i_cooperative_avg + start(1)*i_patient_avg
                     
+          # compassionate residual fixed to 0
           i_compassionate_avg ~~ 0*i_compassionate_avg
           
           # moral factor
@@ -422,6 +423,7 @@ si_bi = '## self  --------------------------------------------------------
           s_bias~~0*s_moral
           s_bias~~0*i_moral
           
+          # factors unrelated except for agreement
           i_ability ~~ 0*i_warmth
           i_ability ~~ 0*i_moral
           i_ability ~~ 0*s_warmth
