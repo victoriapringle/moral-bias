@@ -73,10 +73,7 @@ s_wma = '# ability factor
         warmth =~ start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
                   start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
                   start(1)*SP_cooperative + start(1)*SP_patient
-        
-        
-        # moral factor
-        moral =~ start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
+        start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
         
                 
         # allow factors to correlate
@@ -253,6 +250,8 @@ s_bi = "# ability factor
           
           # loyal residual fixed to 0 
           SP_loyal ~~ 0*SP_loyal
+          
+          SP_compassionate ~~ 0*SP_compassionate
           
           
           # bias factor
