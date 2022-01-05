@@ -218,7 +218,7 @@ fa.diagram(fa_ci2)
 spmoral = 
 sp_items %>% select(c(SP_compassionate, SP_kind, SP_warm, SP_generous, SP_fair,
                       SP_humble, SP_cooperative, SP_loyal,
-                      SP_honest, SP_trustworthy))
+                      SP_honest, SP_trustworthy, SP_patient))
 
 colnames(spmoral) = gsub("SP_", "", colnames(spmoral))
 
@@ -309,7 +309,7 @@ fa_wma$loadings
 imoral = 
   i_items %>% select(c(i_compassionate_avg, i_kind_avg, i_warm_avg, i_generous_avg,
                        i_fair_avg, i_humble_avg, i_cooperative_avg, 
-                       i_loyal_avg, i_honest_avg, i_trustworthy_avg))
+                       i_loyal_avg, i_honest_avg, i_trustworthy_avg, i_patient_avg))
 
 colnames(imoral) = gsub("_avg", "", colnames(imoral))
 
