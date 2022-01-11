@@ -20,8 +20,8 @@ sp_items = data %>% select(starts_with("SP_"))
 i_items = data %>% select(ends_with("avg"))
 
 
-sp_items = sp_items[, -c(6,8:12,17,23:25)]
-i_items = i_items[, -c(1,7,12:15)]
+sp_items = sp_items[, -c(2,6,10,12,17,18,21,23:26)]
+i_items = i_items[, -c(1,2,4,7:8,13,21)]
 
 
 #-------------------------------------------------------------------------------
@@ -176,6 +176,10 @@ datasummary(All(m) ~ Mean + SD + Median, data = m, add_columns = corr, output = 
 
 
 
+sink("descriptives.txt")
+print(sp_descriptives)
+print(i_descriptives)
+sink()
 
 
 
