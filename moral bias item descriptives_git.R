@@ -176,11 +176,6 @@ datasummary(All(m) ~ Mean + SD + Median, data = m, add_columns = corr, output = 
 
 
 
-sink("descriptives.txt")
-print(sp_descriptives)
-print(i_descriptives)
-sink()
-
 
 
 
