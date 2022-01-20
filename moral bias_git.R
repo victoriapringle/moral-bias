@@ -457,35 +457,34 @@ lavInspect(si_bi.fit, what="std.all")$psi
 # -------------------------------- extras --------------------------------------
 # is bias related to self-esteem? ----------------------------------------------
 se_bias = "# ability factor
-           s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
-                        start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
-                        start(1)*SP_socially.skilled
-                        
-        
+         s_ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
+                    start(1)*SP_socially.skilled + start(1)*SP_funny
+          
+          
           # warmth factor
-            s_warmth =~ start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
-                      a*SP_humble + b*SP_kind + c*SP_cooperative
-            
+          s_warmth =~ start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
+                    start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
+                    start(1)*SP_cooperative + start(1)*SP_patient
+                    
           
           # moral factor
-            s_moral =~ start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy + 
-                   start(1)*SP_loyal +
-                   a*SP_humble + b*SP_kind + c*SP_cooperative
-                  
+          s_moral =~ start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
+          
+          # loyal residual fixed to 0 
+          SP_loyal ~~ 0*SP_loyal
+          
+          SP_compassionate ~~ 0*SP_compassionate
+          
           
           # bias factor
           s_bias =~ start(1)*SP_creative + start(1)*SP_intelligent +
-                    start(1)*SP_selfdiciplined + start(-1)*SP_disorganized +
-                    start(1)*SP_socially.skilled +
-                    start(1)*SP_happy + start(1)*SP_warm + start(1)*SP_funny +
-                    start(1)*SP_humble + start(1)*SP_kind + start(1)*SP_cooperative +
-                    start(1)*SP_fair + start(1)*SP_honest + start(1)*SP_trustworthy +
-                    start(1)*SP_loyal
-                    
-          # allow main factors to correlate
-          s_moral ~~ s_warmth
-          s_moral ~~ s_ability
-          s_warmth ~~ s_ability
+                      start(1)*SP_socially.skilled + start(1)*SP_funny +
+                      start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
+                      start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
+                      start(1)*SP_cooperative +
+                      start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal + start(1)*SP_patient
+          
+           
                       
           # but main factors independent of bias
           s_bias~~0*s_ability
@@ -500,6 +499,10 @@ se_bias = "# ability factor
           se ~~ 0*s_moral
           se ~~ 0*s_warmth
           se ~~ 0*s_ability
+          
+          s_moral ~~ 0*s_warmth
+          s_moral ~~ 0*s_ability
+          s_ability ~~ 0*s_warmth
           "
 
 
@@ -513,40 +516,43 @@ semPaths(se_bias.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 
 # is bias related to liking? ---------------------------------------------------
-like_bias = " # ability factor
+like_bias = "# ability factor
               i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
-                           start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
-                           start(1)*i_socially.skilled_avg
-                        
+                         start(1)*i_socially.skilled_avg + start(1)*i_funny_avg 
+      
               # warmth factor
-                i_warmth =~ start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
-                            x*i_humble_avg + y*i_kind_avg +z*i_cooperative_avg
+              i_warmth =~ start(1)*i_compassionate_avg + start(1)*i_kind_avg + 
+                        start(1)*i_warm_avg + start(1)*i_generous_avg + 
+                        start(1)*i_fair_avg + start(1)*i_humble_avg +
+                        start(1)*i_cooperative_avg + start(1)*i_patient_avg
+                        
+              # compassionate residual fixed to 0 
+              i_compassionate_avg ~~ 0*i_compassionate_avg
               
               # moral factor
-                i_moral =~ start(1)*i_fair_avg + start(1)*i_honest_avg + 
-                           start(1)*i_trustworty_avg + start(1)*i_loyal_avg +
-                           x*i_humble_avg + y*i_kind_avg + z*i_cooperative_avg
-              
-              # allow factors to correlate
-              i_moral ~~ i_warmth
-              i_moral ~~ i_ability
-              i_warmth ~~ i_ability
-              
+              i_moral =~ start(1)*i_honest_avg + start(1)*i_trustworty_avg + 
+              start(1)*i_loyal_avg
+      
                            
               # bias factor
               i_bias =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
-                        start(1)*i_selfdiciplined_avg + start(-1)*i_disorganized_avg +
-                        start(1)*i_socially.skilled_avg +
-                        start(1)*i_happy_avg + start(1)*i_warm_avg + start(1)*i_funny_avg +
-                        start(1)*i_humble_avg + start(1)*i_kind_avg + start(1)*i_cooperative_avg +
-                        start(1)*i_fair_avg + start(1)*i_honest_avg + 
-                        start(1)*i_trustworty_avg + start(1)*i_loyal_avg
-                           
+                        start(1)*i_socially.skilled_avg + start(1)*i_funny_avg +
+                        start(1)*i_compassionate_avg + start(1)*i_kind_avg + 
+                        start(1)*i_warm_avg + start(1)*i_generous_avg + 
+                        start(1)*i_fair_avg + start(1)*i_humble_avg +
+                        start(1)*i_cooperative_avg + start(1)*i_patient_avg + 
+                        start(1)*i_honest_avg + start(1)*i_trustworty_avg + 
+                        start(1)*i_loyal_avg 
+                            
               # main factors independent of bias
               i_bias~~0*i_ability
               i_bias~~0*i_warmth
               i_bias~~0*i_moral
               
+              
+              i_moral ~~ 0*i_warmth
+              i_moral ~~ 0*i_ability
+              i_ability ~~ 0*i_warmth
               
               # liking
               liking =~ NA*i_like_avg
