@@ -171,6 +171,9 @@ corr = corr[,-1]                                            # remove col 1 which
 datasummary(All(m) ~ Mean + SD + Median, data = m, add_columns = corr, output = 'moralbias_table1.html')
 
 
+corrplot::corrplot(cor(m,use="na.or.complete", method = "pearson"), type = "lower", method = "color",
+                   tl.col="black", tl.srt=45, cl.ratio = .1, mar=c(0,0,2,0))
+
 
 
 
