@@ -72,8 +72,10 @@ s_wma = '# ability factor
         # warmth factor
         warmth =~ start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
                   start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
-                  start(1)*SP_cooperative + start(1)*SP_patient
-        start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
+                  start(1)*SP_cooperative + start(1)*SP_patient 
+        
+        # moral factor
+        moral =~ start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
         
                 
         # allow factors to correlate
@@ -231,6 +233,9 @@ semPaths(si_wma.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 lavInspect(si_wma.fit, what="est")$psi
 lavInspect(si_wma.fit, what="std.all")$psi
+
+# get CIs for std correlations
+x=standardizedSolution(si_wma.fit)
 
 
 # model 15: self-bias bifactor  ------------------------------------------------
@@ -404,8 +409,6 @@ si_bi = '## self  --------------------------------------------------------
           s_moral ~~ i_moral
           s_ability ~~ i_ability
           
-          # bias factors independent
-          i_bias ~~ 0*s_bias
           
           # bias factors independent of main factors
           i_bias~~0*i_ability
@@ -451,6 +454,9 @@ semPaths(si_bi.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 lavInspect(si_bi.fit, what="est")$psi
 lavInspect(si_bi.fit, what="std.all")$psi
 
+
+# get CIs for std correlations
+standardizedSolution(si_bi.fit)
 
 
 # ------------------------------------------------------------------------------
@@ -573,14 +579,101 @@ semPaths(like_bias.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 
 
+# compare WMA models pre-/post-positivity --------------------------------------
+# self  ------------------------------------------------------------------------
+s_wma2 = '# ability factor
+        ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
+                  start(1)*SP_socially.skilled + start(1)*SP_funny
+        
+        
+        # warmth factor
+        warmth =~ start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
+                  start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
+                  start(1)*SP_cooperative + start(1)*SP_patient 
+        
+        # moral factor
+        moral =~ start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
+        
+                
+        # allow factors to correlate
+        moral ~~ 0*warmth
+        moral ~~ 0*ability
+        warmth ~~ 0*ability
+
+        '
+
+s_wma2.fit = cfa(s_wma2, data, missing='fiml')
+summary(s_wma2.fit, fit.measures = TRUE, standardized = TRUE)
+
+semPaths(s_wma2.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
+         style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
+
+
+# anova to compare bc they're nested
+anova(s_wma.fit, s_bi.fit)
+
+fitmeasures(s_wma2.fit)
+fitmeasures(s_bi.fit)
+
+
+# informant  -------------------------------------------------------------------
+i_wma2 = '# ability factor
+        i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
+                   start(1)*i_socially.skilled_avg + start(1)*i_funny_avg 
+
+        # warmth factor
+        i_warmth =~ start(1)*i_compassionate_avg + start(1)*i_kind_avg + 
+                  start(1)*i_warm_avg + start(1)*i_generous_avg + 
+                  start(1)*i_fair_avg + start(1)*i_humble_avg +
+                  start(1)*i_cooperative_avg + start(1)*i_patient_avg
+                  
+        
+        # moral factor
+        i_moral =~ start(1)*i_honest_avg + start(1)*i_trustworty_avg + 
+        start(1)*i_loyal_avg
+
+          
+        # allow factors to correlate
+        i_moral ~~ 0*i_warmth
+        i_moral ~~ 0*i_ability
+        i_warmth ~~ 0*i_ability
+        '
+
+i_wma2.fit = cfa(i_wma2, data, missing='fiml')
+summary(i_wma2.fit, fit.measures = TRUE, standardized = TRUE)
+semPaths(i_wma2.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
+         style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
+
+
+# anova to compare 
+anova(i_wma.fit, i_bi.fit)
+
+fitmeasures(i_wma2.fit)
+fitmeasures(i_bi.fit)
 
 
 
+# are positivity loadings correlated with desirability ratings? ----------------
+desirability = read.csv("clean social desirability ratings.csv")
+
+avg_desirability = 
+  as.data.frame(colMeans(desirability[,2:23], na.rm = T))
+
+avg_desirability = 
+  avg_desirability %>% 
+  rownames_to_column(.) %>%
+  rename(avg_desirability = `colMeans(desirability[, 2:23], na.rm = T)`,
+         trait = rowname) 
 
 
+# extract positivity loadings for self-model
+self_pos_loadings = inspect(s_bi.fit,what="std")$lambda[,4]
+inf_pos_loadings = inspect(i_bi.fit,what="std")$lambda[,4]
 
 
-
+# are the loadings correlated with the item's evaluativeness?
+cor.test(self_pos_loadings, avg_desirability$avg_desirability[1:15])
+cor.test(inf_pos_loadings, avg_desirability$avg_desirability[1:15])
 
 
 
