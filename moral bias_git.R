@@ -675,7 +675,16 @@ inf_pos_loadings = inspect(i_bi.fit,what="std")$lambda[,4]
 cor.test(self_pos_loadings, avg_desirability$avg_desirability[1:15])
 cor.test(inf_pos_loadings, avg_desirability$avg_desirability[1:15])
 
+std.prmts = standardizedSolution(s_bi.fit)
 
+item = std.prmts[1:15,3]
+store_lambda = data.frame(loading = rep(NA, 15))
+
+for (i in 1:15){
+  lambda_pos = std.prmts[std.prmts$lhs=="s_bias" & std.prmts$rhs==item[i],"est.std"]
+  
+  store_lambda[i,] = lambda_pos
+} # close loop
 
 
 
