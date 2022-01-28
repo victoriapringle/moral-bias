@@ -37,7 +37,23 @@ i_wma_items =
 all_wma = cbind(s_wma_items, i_wma_items)
 cortable = round(cor(all_wma, use = "na.or.complete"),3)
 
+library(corrr)
+cortable = correlate(all_wma)
+cortable = cortable %>% mutate(across(where(is.numeric), round, 3)) 
 
+
+long_cor = 
+cortable %>%  
+  gather(-term, key = "colname", value = "cor") %>%
+  mutate(across(where(is.numeric), round, 3)) 
+
+# informants as cols, self as rows, so diagonal = item-level agreement
+small_cortable = 
+cortable %>% 
+  focus(names(i_wma_items))
+
+
+write.table(small_cortable, "cortable.txt")
 
 #-------------------------------------------------------------------------------
 # ------------------------- SELF ITEMS -----------------------------------------
