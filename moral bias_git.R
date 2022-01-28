@@ -93,6 +93,68 @@ semPaths(s_wma.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 
 
+# UNcorrelated warmth, morality, ability ---------------------------------------
+s_wma_uc = '# ability factor
+        ability =~ start(1)*SP_creative + start(1)*SP_intelligent +
+                  start(1)*SP_socially.skilled + start(1)*SP_funny
+        
+        
+        # warmth factor
+        warmth =~ start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
+                  start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
+                  start(1)*SP_cooperative + start(1)*SP_patient 
+        
+        # moral factor
+        moral =~ start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
+        
+                
+        # allow factors to correlate
+        moral ~~ 0*warmth
+        moral ~~ 0*ability
+        warmth ~~ 0*ability
+
+        '
+
+s_wma_uc.fit = cfa(s_wma_uc, data, missing='fiml')
+s_wma_uc.fit %>% summary(fit.measures = TRUE, standardized = TRUE)
+
+semPaths(s_wma_uc.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
+         style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
+
+
+
+# compare correlated & uncorrelated factors models
+anova(s_wma.fit, s_wma_uc.fit)
+
+
+
+# positivity-only model --------------------------------------------------------
+s_posonly = '# positivity 
+        positivity =~ start(1)*SP_creative + start(1)*SP_intelligent +
+        start(1)*SP_socially.skilled + start(1)*SP_funny + 
+        start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
+        start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
+        start(1)*SP_cooperative + start(1)*SP_patient +
+        start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
+        '
+s_posonly.fit = cfa(s_posonly, data, missing='fiml')
+s_posonly.fit %>% summary(fit.measures = TRUE, standardized = TRUE)
+
+
+# compare pos-only to correlated-factors model ---------------------------------
+# i don't think these are nested because we've added/removed factors, so we
+# will compare AIC + BIC
+
+# Compare by AIC
+exp(-1/2 * abs(AIC(s_posonly.fit) - AIC(s_wma.fit)))
+AIC(s_posonly.fit)
+AIC(s_wma.fit)
+
+# Compare BIC
+abs(BIC(s_posonly.fit) - BIC (s_wma.fit))
+BIC(s_posonly.fit)
+BIC(s_wma.fit)
+
 
 
 # ------------------------------------------------------------------------------
@@ -165,6 +227,76 @@ summary(i_wma.fit, fit.measures = TRUE, standardized = TRUE)
 semPaths(i_wma.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
          style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
 
+
+
+# UNcorrelated warmth, morality, ability ---------------------------------------
+i_wma_uc = '# ability factor
+        i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
+                   start(1)*i_socially.skilled_avg + start(1)*i_funny_avg 
+
+        # warmth factor
+        i_warmth =~ start(1)*i_compassionate_avg + start(1)*i_kind_avg + 
+                  start(1)*i_warm_avg + start(1)*i_generous_avg + 
+                  start(1)*i_fair_avg + start(1)*i_humble_avg +
+                  start(1)*i_cooperative_avg + start(1)*i_patient_avg
+                  
+        
+        # moral factor
+        i_moral =~ start(1)*i_honest_avg + start(1)*i_trustworty_avg + 
+        start(1)*i_loyal_avg
+
+          
+        # allow factors to correlate
+        i_moral ~~ 0*i_warmth
+        i_moral ~~ 0*i_ability
+        i_warmth ~~ 0*i_ability
+        '
+
+i_wma_uc.fit = cfa(i_wma_uc, data, missing='fiml')
+summary(i_wma_uc.fit, fit.measures = TRUE, standardized = TRUE)
+semPaths(i_wma_uc.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
+         style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
+
+
+
+# compare correlated- and uncorrelated-factors models --------------------------
+anova(i_wma.fit, i_wma_uc.fit)
+
+
+
+
+# positivity-only model --------------------------------------------------------
+i_posonly = '
+        positivity =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
+                    start(1)*i_socially.skilled_avg + start(1)*i_funny_avg +
+                    start(1)*i_compassionate_avg + start(1)*i_kind_avg + 
+                    start(1)*i_warm_avg + start(1)*i_generous_avg + 
+                    start(1)*i_fair_avg + start(1)*i_humble_avg +
+                    start(1)*i_cooperative_avg + start(1)*i_patient_avg + 
+                    start(1)*i_honest_avg + start(1)*i_trustworty_avg + 
+                    start(1)*i_loyal_avg
+              '
+
+i_posonly.fit = cfa(i_posonly, data, missing='fiml')
+summary(i_posonly.fit, fit.measures = TRUE, standardized = TRUE)
+semPaths(i_posonly.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
+         style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
+
+
+
+# compare pos-only to correlated-factors model ---------------------------------
+# i don't think these are nested because we've added/removed factors, so we
+# will compare AIC + BIC
+
+# Compare by AIC
+exp(-1/2 * abs(AIC(i_posonly.fit) - AIC(i_wma.fit)))
+AIC(i_posonly.fit)
+AIC(i_wma.fit)
+
+# Compare BIC
+abs(BIC(i_posonly.fit) - BIC (i_wma.fit))
+BIC(i_posonly.fit)
+BIC(i_wma.fit)
 
 
 
@@ -289,6 +421,16 @@ lavInspect(s_bi.fit, what="est")$psi
 lavInspect(s_bi.fit, what="std")$psi
 
 
+# compare bifactor to uncorrelated-factors model -------------------------------
+anova(s_bi.fit, s_wma_uc.fit)
+
+# Compare BIC
+abs(BIC(s_wma_uc.fit) - BIC(s_bi.fit))
+BIC(s_bi.fit)
+BIC(s_wma_uc.fit)
+
+
+
 # model 16: informant bias bifactor --------------------------------------------
 i_bi = '# ability factor
           i_ability =~ start(1)*i_creative_avg + start(1)*i_intelligent_avg +
@@ -339,6 +481,16 @@ semPaths(i_bi.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 lavInspect(i_bi.fit, what="est")$psi
 lavInspect(i_bi.fit, what="std")$psi
+
+
+# compare bifactor to uncorrelated-factors model -------------------------------
+anova(i_bi.fit, i_wma_uc.fit)
+
+# Compare BIC
+abs(BIC(i_wma_uc.fit) - BIC(i_bi.fit))
+BIC(i_bi.fit)
+BIC(i_wma_uc.fit)
+
 
 
 
