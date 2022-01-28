@@ -53,7 +53,7 @@ cortable %>%
   focus(names(i_wma_items))
 
 
-write.table(small_cortable, "cortable.txt")
+write.table(small_cortable, "cortable.txt", row.names = F)
 
 #-------------------------------------------------------------------------------
 # ------------------------- SELF ITEMS -----------------------------------------
