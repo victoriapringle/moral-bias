@@ -19,9 +19,24 @@ data = rename(data, i_trustworthy_avg = i_trustworty_avg)
 sp_items = data %>% select(starts_with("SP_"))
 i_items = data %>% select(ends_with("avg"))
 
+names(i_items) = gsub("_avg", "", names(i_items))
 
-sp_items = sp_items[, -c(2,6,10,12,17,18,21,23:26)]
-i_items = i_items[, -c(1,2,4,7:8,13,21)]
+s_wma_items = 
+sp_items %>% select(c("SP_warm", "SP_funny", "SP_humble", "SP_kind", "SP_cooperative",
+                      "SP_generous", "SP_compassionate", "SP_patient", "SP_fair",
+                      "SP_honest", "SP_trustworthy", "SP_loyal", "SP_creative",
+                      "SP_intelligent", "SP_socially.skilled"))
+
+
+i_wma_items =
+  i_items %>% select(c("i_warm", "i_funny", "i_humble", "i_kind", "i_cooperative",
+                       "i_generous", "i_compassionate", "i_patient", "i_fair",
+                       "i_honest", "i_trustworthy", "i_loyal", "i_creative",
+                       "i_intelligent", "i_socially.skilled"))
+
+all_wma = cbind(s_wma_items, i_wma_items)
+cortable = round(cor(all_wma, use = "na.or.complete"),3)
+
 
 
 #-------------------------------------------------------------------------------
