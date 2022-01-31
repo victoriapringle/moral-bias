@@ -125,7 +125,7 @@ semPaths(s_wma_uc.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 # compare correlated & uncorrelated factors models
 anova(s_wma.fit, s_wma_uc.fit)
-
+abs(BIC(s_wma.fit) - BIC(s_wma_uc.fit))
 
 
 # positivity-only model --------------------------------------------------------
@@ -139,6 +139,8 @@ s_posonly = '# positivity
         '
 s_posonly.fit = cfa(s_posonly, data, missing='fiml')
 s_posonly.fit %>% summary(fit.measures = TRUE, standardized = TRUE)
+semPaths(s_posonly.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
+         style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5)
 
 
 # compare pos-only to correlated-factors model ---------------------------------
@@ -261,8 +263,7 @@ semPaths(i_wma_uc.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 # compare correlated- and uncorrelated-factors models --------------------------
 anova(i_wma.fit, i_wma_uc.fit)
-
-
+abs(BIC(i_wma.fit) - BIC(i_wma_uc.fit))
 
 
 # positivity-only model --------------------------------------------------------
@@ -406,7 +407,6 @@ s_bi = "# ability factor
           s_moral ~~ 0*s_warmth
           s_moral ~~ 0*s_ability
           s_ability ~~ 0*s_warmth
-          
           "
 
         
@@ -491,7 +491,7 @@ abs(BIC(i_wma_uc.fit) - BIC(i_bi.fit))
 BIC(i_bi.fit)
 BIC(i_wma_uc.fit)
 
-
+anova(i_bi.fit, i_wma_uc.fit)
 
 
 # model 17: agreement post-bias BIFACTOR  --------------------------------------
@@ -672,6 +672,11 @@ semPaths(se_bias.fit, "std", intercepts = FALSE, edge.label.cex = .7,
 
 
 
+# get CIs for std correlations
+standardizedSolution(se_bias.fit)
+
+
+
 
 # is bias related to liking? ---------------------------------------------------
 like_bias = "# ability factor
@@ -727,6 +732,9 @@ summary(like_bias.fit, fit.measures = TRUE, standardized = TRUE)
 semPaths(like_bias.fit, "std", intercepts = FALSE, edge.label.cex = .7, 
          style = 'lisrel', fade=F, sizeMan = 5, sizeLat = 5, layout="tree2",
          bifactor = c("liking","i_bias"), rotation = 3)
+
+# get CIs for std correlations
+standardizedSolution(like_bias.fit)
 
 
 
