@@ -813,38 +813,112 @@ fitmeasures(i_bi.fit)
 
 
 
+
+
+
 # are positivity loadings correlated with desirability ratings? ----------------
-desirability = read.csv("clean social desirability ratings.csv")
+library(stringr)
+all_desirability = read_csv("new_clean desirability ratings_all raters.csv")
+reduced_desirability = read_csv("new_clean desirability ratings_dropped raters.csv")
 
-avg_desirability = 
-  as.data.frame(colMeans(desirability[,2:23], na.rm = T))
 
+
+# ICCs
+ICC(t(all_desirability[,c(2:16)]))
+ICC(t(reduced_desirability[,c(2:16)]))
+
+
+
+# compute average desirability by trait
 avg_desirability = 
-  avg_desirability %>% 
+  as.data.frame(colMeans(reduced_desirability[,2:16], na.rm = T)) %>%
   rownames_to_column(.) %>%
-  rename(avg_desirability = `colMeans(desirability[, 2:23], na.rm = T)`,
-         trait = rowname) 
+  rename(avg_desirability = `colMeans(reduced_desirability[, 2:16], na.rm = T)`,
+         trait = rowname) %>%
+  mutate(across(where(is.numeric), round, 3)) 
 
 
-# extract positivity loadings for self-model
+
+# examine cors between pos loadings and des ratings for REDUCED data (i.e. raters with sd=0 dropped)
+# extract positivity loadings from self-model + merge with average soc des ratings
 self_pos_loadings = inspect(s_bi.fit,what="std")$lambda[,4]
+self_pos_loadings = as.data.frame(self_pos_loadings)
+self_pos_loadings$trait = row.names(self_pos_loadings)
+self_pos_loadings = self_pos_loadings %>% transform(trait=str_replace(trait,"SP_",""))
+self_pos_loadings = self_pos_loadings %>% transform(trait=str_replace(trait,"socially.skilled","socially_skilled"))
+self_pos_loadings = merge(self_pos_loadings, avg_desirability)
+cor.test(self_pos_loadings$self_pos_loadings, self_pos_loadings$avg_desirability)
+
+
+#extract positivity loadings from informant model + merge with average soc des ratings
 inf_pos_loadings = inspect(i_bi.fit,what="std")$lambda[,4]
+inf_pos_loadings = as.data.frame(inf_pos_loadings)
+inf_pos_loadings$trait = row.names(inf_pos_loadings)
+inf_pos_loadings = inf_pos_loadings %>% transform(trait=str_replace(trait,"i_",""))
+inf_pos_loadings = inf_pos_loadings %>% transform(trait=str_replace(trait,"_avg",""))
+inf_pos_loadings = inf_pos_loadings %>% transform(trait=str_replace(trait,"socially.skilled","socially_skilled"))
+inf_pos_loadings = inf_pos_loadings %>% transform(trait=str_replace(trait,"trustworty","trustworthy"))
+inf_pos_loadings = merge(inf_pos_loadings, avg_desirability)
+cor.test(inf_pos_loadings$inf_pos_loadings, inf_pos_loadings$avg_desirability)
 
 
-# are the loadings correlated with the item's evaluativeness?
-cor.test(self_pos_loadings, avg_desirability$avg_desirability[1:15])
-cor.test(inf_pos_loadings, avg_desirability$avg_desirability[1:15])
+self_pos_loadings = self_pos_loadings %>% rename(pos_loadings = self_pos_loadings)
+self_pos_loadings$perspective = rep("self", 15)
+self_pos_loadings$dimension = c("w", "w", "a", "w", "a", "w", 
+                                "m", "w", "a", "w", "m", "w", 
+                                "a", "m", "w")
 
-std.prmts = standardizedSolution(s_bi.fit)
 
-item = std.prmts[1:15,3]
-store_lambda = data.frame(loading = rep(NA, 15))
+inf_pos_loadings = inf_pos_loadings %>% rename(pos_loadings = inf_pos_loadings)
+inf_pos_loadings$perspective = rep("inf", 15)
+inf_pos_loadings$dimension = c("w", "w", "a", "w", "a", "w", 
+                                "m", "w", "a", "w", "m", "w", 
+                                "a", "m", "w")
 
-for (i in 1:15){
-  lambda_pos = std.prmts[std.prmts$lhs=="s_bias" & std.prmts$rhs==item[i],"est.std"]
-  
-  store_lambda[i,] = lambda_pos
-} # close loop
+
+x = rbind(self_pos_loadings, inf_pos_loadings)
+cor.test(x$avg_desirability, x$pos_loadings)
+
+
+ggplot(x, aes(avg_desirability, pos_loadings, color = dimension, shape = perspective)) + 
+  geom_point(size=3) +
+  labs(x = "average desirability rating",
+       y = "positivity factor loading (standardized)",
+       title = "correlation between item desirability & positivity factor loadings")
+
+
+# repeat on full rating data
+avg_desirability_all = 
+  as.data.frame(colMeans(all_desirability[,2:16], na.rm = T)) %>%
+  rownames_to_column(.) %>%
+  rename(avg_desirability = `colMeans(all_desirability[, 2:16], na.rm = T)`,
+         trait = rowname) %>%
+  mutate(across(where(is.numeric), round, 3)) 
+
+self_pos_loadings = inspect(s_bi.fit,what="std")$lambda[,4]
+self_pos_loadings = as.data.frame(self_pos_loadings)
+self_pos_loadings$trait = row.names(self_pos_loadings)
+self_pos_loadings = self_pos_loadings %>% transform(trait=str_replace(trait,"SP_",""))
+self_pos_loadings = self_pos_loadings %>% transform(trait=str_replace(trait,"socially.skilled","socially_skilled"))
+self_pos_loadings_all = merge(self_pos_loadings, avg_desirability_all)
+cor.test(self_pos_loadings_all$self_pos_loadings, self_pos_loadings_all$avg_desirability)
+
+
+#extract positivity loadings from informant model + merge with average soc des ratings
+inf_pos_loadings = inspect(i_bi.fit,what="std")$lambda[,4]
+inf_pos_loadings = as.data.frame(inf_pos_loadings)
+inf_pos_loadings$trait = row.names(inf_pos_loadings)
+inf_pos_loadings = inf_pos_loadings %>% transform(trait=str_replace(trait,"i_",""))
+inf_pos_loadings = inf_pos_loadings %>% transform(trait=str_replace(trait,"_avg",""))
+inf_pos_loadings = inf_pos_loadings %>% transform(trait=str_replace(trait,"socially.skilled","socially_skilled"))
+inf_pos_loadings = inf_pos_loadings %>% transform(trait=str_replace(trait,"trustworty","trustworthy"))
+inf_pos_loadings_all = merge(inf_pos_loadings, avg_desirability_all)
+cor.test(inf_pos_loadings_all$inf_pos_loadings, inf_pos_loadings_all$avg_desirability)
+
+
+
+
+
 
 
 
