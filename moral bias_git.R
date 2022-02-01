@@ -887,7 +887,7 @@ ggplot(x, aes(avg_desirability, pos_loadings, color = dimension, shape = perspec
        title = "correlation between item desirability & positivity factor loadings")
 
 
-# repeat on full rating data
+# repeat on full rating data ---------------------------------------------------
 avg_desirability_all = 
   as.data.frame(colMeans(all_desirability[,2:16], na.rm = T)) %>%
   rownames_to_column(.) %>%
@@ -895,26 +895,37 @@ avg_desirability_all =
          trait = rowname) %>%
   mutate(across(where(is.numeric), round, 3)) 
 
-self_pos_loadings = inspect(s_bi.fit,what="std")$lambda[,4]
-self_pos_loadings = as.data.frame(self_pos_loadings)
-self_pos_loadings$trait = row.names(self_pos_loadings)
-self_pos_loadings = self_pos_loadings %>% transform(trait=str_replace(trait,"SP_",""))
-self_pos_loadings = self_pos_loadings %>% transform(trait=str_replace(trait,"socially.skilled","socially_skilled"))
+
 self_pos_loadings_all = merge(self_pos_loadings, avg_desirability_all)
 cor.test(self_pos_loadings_all$self_pos_loadings, self_pos_loadings_all$avg_desirability)
 
-
-#extract positivity loadings from informant model + merge with average soc des ratings
-inf_pos_loadings = inspect(i_bi.fit,what="std")$lambda[,4]
-inf_pos_loadings = as.data.frame(inf_pos_loadings)
-inf_pos_loadings$trait = row.names(inf_pos_loadings)
-inf_pos_loadings = inf_pos_loadings %>% transform(trait=str_replace(trait,"i_",""))
-inf_pos_loadings = inf_pos_loadings %>% transform(trait=str_replace(trait,"_avg",""))
-inf_pos_loadings = inf_pos_loadings %>% transform(trait=str_replace(trait,"socially.skilled","socially_skilled"))
-inf_pos_loadings = inf_pos_loadings %>% transform(trait=str_replace(trait,"trustworty","trustworthy"))
 inf_pos_loadings_all = merge(inf_pos_loadings, avg_desirability_all)
 cor.test(inf_pos_loadings_all$inf_pos_loadings, inf_pos_loadings_all$avg_desirability)
 
+self_pos_loadings_all = self_pos_loadings_all %>% rename(pos_loadings = self_pos_loadings)
+self_pos_loadings_all$perspective = rep("self", 15)
+self_pos_loadings_all$dimension = c("w", "w", "a", "w", "a", "w", 
+                                "m", "w", "a", "w", "m", "w", 
+                                "a", "m", "w")
+
+
+inf_pos_loadings_all = inf_pos_loadings_all %>% rename(pos_loadings = inf_pos_loadings)
+inf_pos_loadings_all$perspective = rep("inf", 15)
+inf_pos_loadings_all$dimension = c("w", "w", "a", "w", "a", "w", 
+                               "m", "w", "a", "w", "m", "w", 
+                               "a", "m", "w")
+
+
+x2 = rbind(self_pos_loadings_all, inf_pos_loadings_all)
+cor.test(x2$avg_desirability, x2$pos_loadings)
+
+
+ggplot(x, aes(avg_desirability, pos_loadings, color = dimension, shape = perspective)) + 
+  geom_point(size=3) +
+  labs(x = "average desirability rating",
+       y = "positivity factor loading (standardized)",
+       title = "correlation between item desirability & positivity factor loadings") +
+  theme_bw()
 
 
 
