@@ -256,7 +256,8 @@ si_bi = '## self  --------------------------------------------------------
                       start(1)*SP_compassionate + start(1)*SP_kind + start(1)*SP_warm +
                       start(1)*SP_generous + start(1)*SP_fair + start(1)*SP_humble +
                       start(1)*SP_cooperative + start(1)*SP_patient +
-                      start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal
+                      start(1)*SP_honest + start(1)*SP_trustworthy + start(1)*SP_loyal +
+                      start(1)*SP_selfesteem
           
           
          ## informant -----------------------------------------------------
@@ -289,7 +290,7 @@ si_bi = '## self  --------------------------------------------------------
                     start(1)*i_fair_i1 + start(1)*i_humble_i1 +
                     start(1)*i_cooperative_i1 + start(1)*i_patient_i1 +
                     start(1)*i_honest_i1 + start(1)*i_trustworty_i1 + 
-                    start(1)*i_loyal_i1 
+                    start(1)*i_loyal_i1 + start(1)*i_like_i1
                      
                     
           # agreement ----------------------------------------------------------
